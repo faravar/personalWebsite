@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بازی فکر و بکر | فرهاد کریم‌زاده</title>
+    <style>
+        /* بارگذاری فونت ایران‌سنس */
+        @font-face {
+            font-family: 'IRANSans';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
+        }
+
+        :root {
+            --bg-color: #1a2332;
+            --panel-bg: #111823;
+            --text-color: #f3f4f6;
+            --border-color: #2d3748;
+            --row-bg: #222c3c;
+            --active-row-bg: #1e3a8a;
+        }
+
+        body {
+            font-family: 'IRANSans', Tahoma, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+            color: #3b82f6;
+            font-size: 1.8rem;
+        }
+
+        .rules {
+            font-size: 0.85rem;
+            color: #c3c8d1;
+            text-align: center;
+            max-width: 450px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .game-container {
+            background-color: var(--panel-bg);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+        }
+
+        /* محفظه اسکرول با حفظ استایل و ابعاد نسخه قبلی */
+        .board-wrapper {
+            max-height: 380px; 
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        /* زیباسازی اسکرول‌بار */
+        .board-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+        .board-wrapper::-webkit-scrollbar-track {
+            background: var(--panel-bg);
+        }
+        .board-wrapper::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 10px;
+        }
+
+        .board {
+            display: flex;
+            flex-direction: column-reverse; 
+            gap: 12px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background-color: var(--row-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .row.active {
+            border-color: #3b82f6;
+            background-color: var(--active-row-bg);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+        }
+
+        /* بازگشت امتیازها به سمت چپ مطابق نسخه محبوب شما */
+        .hints {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+            width: 36px;
+            height: 36px;
+        }
+
+        .hint-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #374151;
+            border: 1px solid #4b5563;
+        }
+
+        .hint-dot.black { background-color: #000000; border-color: #000; }
+        .hint-dot.white { background-color: #ffffff; border-color: #fff; }
+
+        .slots {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* بازگشت به سایز بزرگ‌تر و جذاب مهره‌ها */
+        .peg {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .row.active .peg:hover {
+            transform: scale(1.1);
+        }
+
+        /* پلت انتخاب ۶ رنگ متمایز */
+        .color-palette {
+            display: flex;
+            justify-content: space-around;
+            background-color: #1f293d;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .palette-color {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .palette-color:hover {
+            transform: scale(1.15);
+        }
+
+        .palette-color.selected {
+            border-color: #fff;
+            box-shadow: 0 0 12px rgba(255,255,255,0.8);
+        }
+
+        /* تنظیم چیدمان دکمه‌ها: بررسی حدس (راست) | شروع مجدد (چپ) */
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-direction: row-reverse; 
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'IRANSans', Tahoma, sans-serif;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-check { background-color: #4b5563; color: white; cursor: not-allowed; }
+        .btn-check.ready {background-color: #417bee; color: #ffffff;  cursor: pointer; }
+        .btn-check.ready:hover { background-color: #265fd1; }
+
+        .btn-reset { background-color: #ef4444; color: white; }
+        .btn-reset:hover { background-color: #dc2626; }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-height: 28px;
+        }
+
+        .secret-view {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 2px dashed var(--border-color);
+        }
+
+        .secret-view .peg { cursor: default; }
+    </style>
+</head>
+<body>
+
+    <h1>بازی فکر و بکر</h1>
+    <div class="rules">
+        سیستم ۴ رنگ متمایز انتخاب کرده است. آن‌ها را حدس بزنید.<br>
+         مهره سیاه: رنگ و جایگاه درست |  مهره سفید: رنگ درست ولی جایگاه غلط
+    </div>
+
+    <div class="game-container">
+        <div class="board-wrapper" id="boardWrapper">
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="color-palette" id="palette"></div>
+
+        <div class="actions">
+            <button class="btn-reset" onclick="initGame()">شروع مجدد</button>
+            <button class="btn-check" id="checkBtn" onclick="checkGuess()">بررسی حدس</button>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div id="secretContainer" style="display: none;">
+            <div style="text-align: center; margin-bottom: 5px; font-size: 0.9rem;">پاسخ صحیح:</div>
+            <div class="secret-view" id="secretView"></div>
+        </div>
+    </div>
+
+    <script style="color: #dbdf14 ;">
+        const COLORS = [
+            '#ef4444', // قرمز
+            '#8b5cf6', // بنفش
+            '#0b9e06', // سبز
+            '#dbdf14', // نارنجی/خردلی ملایم
+            '#092bee', // آبی
+            '#ec4899'  // صورتی
+        ];
+
+        let secretCode = [];
+        let attemptsHistory = []; 
+        let currentGuess = [null, null, null, null];
+        let selectedColor = COLORS[0]; 
+        let isGameOver = false;
+        const MAX_ATTEMPTS = 10; 
+
+        function initGame() {
+            secretCode = [];
+            attemptsHistory = [];
+            isGameOver = false;
+            currentGuess = [null, null, null, null];
+            selectedColor = COLORS[0];
+            
+            document.getElementById('message').textContent = '';
+            document.getElementById('secretContainer').style.display = 'none';
+
+            // سیستم رنگ تکراری نمی‌گذارد (کد ۴ رنگ کاملاً متمایز)
+            let shuffledColors = [...COLORS].sort(() => 0.5 - Math.random());
+            secretCode = shuffledColors.slice(0, 4);
+
+            createPalette();
+            updateUI();
+        }
+
+        function createPalette() {
+            const paletteEl = document.getElementById('palette');
+            paletteEl.innerHTML = '';
+            COLORS.forEach(color => {
+                const colorCircle = document.createElement('div');
+                colorCircle.className = 'palette-color';
+                colorCircle.style.backgroundColor = color;
+                if (color === selectedColor) colorCircle.classList.add('selected');
+                
+                colorCircle.addEventListener('click', () => {
+                    if (isGameOver) return;
+                    document.querySelectorAll('.palette-color').forEach(el => el.classList.remove('selected'));
+                    colorCircle.classList.add('selected');
+                    selectedColor = color;
+                });
+                paletteEl.appendChild(colorCircle);
+            });
+        }
+
+        function updateUI() {
+            const boardEl = document.getElementById('board');
+            boardEl.innerHTML = '';
+
+            const currentAttemptIndex = attemptsHistory.length;
+
+            for (let i = 0; i < MAX_ATTEMPTS; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                if (i === currentAttemptIndex && !isGameOver) row.classList.add('active');
+
+                const slotsContainer = document.createElement('div');
+                slotsContainer.className = 'slots';
+
+                const hintsContainer = document.createElement('div');
+                hintsContainer.className = 'hints';
+
+                if (i < currentAttemptIndex) {
+                    const historyItem = attemptsHistory[i];
+                    
+                    for (let j = 0; j < 4; j++) {
+                        const peg = document.createElement('div');
+                        peg.className = 'peg';
+                        peg.style.backgroundColor = historyItem.guess[j];
+                        slotsContainer.appendChild(peg);
+                    }
+
+                    let dotCount = 0;
+                    for (let b = 0; b < historyItem.black; b++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'hint-dot black';
+                        hintsContainer.appendChild(dot);
+                        dotCount++;
+                    }
+                    for (let w = 0; w < historyItem.white; w++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'hint-dot white';
+                        hintsContainer.appendChild(dot);
+                        dotCount++;
+                    }
+                    while (dotCount < 4) {
+                        const dot = document.createElement('div');
+                        dot.className = 'hint-dot';
+                        hintsContainer.appendChild(dot);
+                        dotCount++;
+                    }
+                } 
+                else if (i === currentAttemptIndex && !isGameOver) {
+                    for (let j = 0; j < 4; j++) {
+                        const peg = document.createElement('div');
+                        peg.className = 'peg';
+                        if (currentGuess[j]) peg.style.backgroundColor = currentGuess[j];
+
+                        peg.addEventListener('click', () => {
+                            currentGuess[j] = selectedColor;
+                            peg.style.backgroundColor = selectedColor;
+                            toggleCheckButtonState();
+                        });
+                        slotsContainer.appendChild(peg);
+                    }
+
+                    for (let h = 0; h < 4; h++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'hint-dot';
+                        hintsContainer.appendChild(dot);
+                    }
+                } 
+                else {
+                    for (let j = 0; j < 4; j++) {
+                        const peg = document.createElement('div');
+                        peg.className = 'peg';
+                        slotsContainer.appendChild(peg);
+                    }
+                    for (let h = 0; h < 4; h++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'hint-dot';
+                        hintsContainer.appendChild(dot);
+                    }
+                }
+
+                // امتیازها در سمت چپ و مهره‌ها در سمت راست ردیف
+                row.appendChild(hintsContainer);
+                row.appendChild(slotsContainer);
+                boardEl.appendChild(row);
+            }
+
+            toggleCheckButtonState();
+            scrollToActiveRow();
+        }
+
+        function scrollToActiveRow() {
+            setTimeout(() => {
+                const activeRow = document.querySelector('.row.active');
+                if (activeRow) {
+                    activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }, 100);
+        }
+
+        function toggleCheckButtonState() {
+            const checkBtn = document.getElementById('checkBtn');
+            const isAllFilled = currentGuess.every(color => color !== null);
+            
+            if (isAllFilled && !isGameOver) {
+                checkBtn.classList.add('ready');
+                checkBtn.disabled = false;
+            } else {
+                checkBtn.classList.remove('ready');
+                checkBtn.disabled = true;
+            }
+        }
+
+        function checkGuess() {
+            if (isGameOver) return;
+            
+            const isAllFilled = currentGuess.every(color => color !== null);
+            if (!isAllFilled) return;
+
+            let blackPegs = 0;
+            let whitePegs = 0;
+
+            let secretCopy = [...secretCode];
+            let guessCopy = [...currentGuess];
+
+            for (let i = 0; i < 4; i++) {
+                if (guessCopy[i] === secretCopy[i]) {
+                    blackPegs++;
+                    secretCopy[i] = null;
+                    guessCopy[i] = null;
+                }
+            }
+
+            for (let i = 0; i < 4; i++) {
+                if (guessCopy[i] === null) continue;
+                const foundIndex = secretCopy.indexOf(guessCopy[i]);
+                if (foundIndex !== -1) {
+                    whitePegs++;
+                    secretCopy[foundIndex] = null;
+                }
+            }
+
+            attemptsHistory.push({
+                guess: [...currentGuess],
+                black: blackPegs,
+                white: whitePegs
+            });
+
+            if (blackPegs === 4) {
+                endGame(true);
+                return;
+            }
+
+            if (attemptsHistory.length >= MAX_ATTEMPTS) {
+                endGame(false);
+                return;
+            }
+
+            currentGuess = [null, null, null, null];
+            updateUI();
+        }
+
+        function endGame(isWin) {
+            isGameOver = true;
+            updateUI();
+            
+            const messageEl = document.getElementById('message');
+            if (isWin) {
+                messageEl.textContent = 'تبریک! شما رمز را کشف کردید! 🎉';
+                messageEl.style.color = '#10b981';
+            } else {
+                messageEl.textContent = 'فرصت شما تمام شد. دوباره تلاش کنید! 😢';
+                messageEl.style.color = '#ef4444';
+            }
+
+            const secretContainer = document.getElementById('secretContainer');
+            const secretView = document.getElementById('secretView');
+            secretView.innerHTML = '';
+            
+            secretCode.forEach(color => {
+                const peg = document.createElement('div');
+                peg.className = 'peg';
+                peg.style.backgroundColor = color;
+                secretView.appendChild(peg);
+            });
+            
+            secretContainer.style.display = 'block';
+            
+            setTimeout(() => {
+                secretContainer.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+        }
+
+        initGame();
+    </script>
+</body>
+<footer >
+    &copy; <a href="https://www.karimzaadeh.ir" target="_blank" rel="noopener noreferrer" style="text-decoration: none;color: #ffffff;"> Farhad Karimzadeh - 2026 </a>
+</footer>
+</html>
