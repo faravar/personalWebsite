@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فرهاد کریم‌زاده | Farhad Karimzadeh</title>
+  <meta name="description" content="سایت رسمی مهندس فرهاد کریم زاده - مقالات، پروژه‌ها و خدمات حرفه‌ای">
+  <meta name="author" content="فرهاد کریم‌زاده">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/iranian-sans@v5.0.3/dist/font-face.css">
+
+  <style>
+    @font-face {
+      font-family: 'IranSans';
+      src: url('https://cdn.jsdelivr.net/gh/rastikerdar/iranian-sans@latest/fonts/IRANSans.woff2') format('woff2');
+      font-weight: 400;
+    }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #16161a;
+      --surface2: #1e1e24;
+      --border: rgba(255,255,255,0.07);
+      --accent: #c8a96e;
+      --accent-dim: rgba(200,169,110,0.12);
+      --accent-glow: rgba(200,169,110,0.25);
+      --text-primary: #f0ece4;
+      --text-secondary: #8a8578;
+      --text-muted: #4a4740;
+      --green: #5db88a;
+      --red: #e05c5c;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'IranSans', 'Vazirmatn', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,13,15,0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      user-select: none;
+    }
+
+    .logo:hover {
+      transform: translateY(-2px);
+    }
+
+    .logo-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .logo-text-en {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.3s;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+    }
+
+    nav a:hover, nav a.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── HAMBURGER ── */
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    .hamburger-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    nav.mobile-open {
+      display: flex !important;
+      position: absolute;
+      top: 64px;
+      right: 0;
+      left: 0;
+      background: rgba(13,13,15,0.98);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 8px 0;
+    }
+
+    nav.mobile-open a {
+      width: 100%;
+      padding: 14px 24px;
+      border-bottom: none;
+    }
+
+    nav.mobile-open a:hover, nav.mobile-open a.active {
+      background: var(--accent-dim);
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HERO SECTION ── */
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: '';
+      height: 1px;
+      width: 32px;
+      background: var(--accent);
+      opacity: 0.4;
+    }
+
+    .hero-eyebrow-right {
+      justify-content: flex-start;
+      text-align: right;
+    }
+
+    .hero-eyebrow-right::after {
+      display: none;
+    }
+
+    .hero h1 {
+      font-size: clamp(24px, 5vw, 38px);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      font-weight: 300;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      border-color: rgba(200,169,110,0.3);
+      transform: translateY(-4px);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .card-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .card-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    /* ── STATS GRID ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 5px;
+      margin: 32px 0;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(200,169,110,0.3);
+      background: var(--surface2);
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ── TAGS ── */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(200,169,110,0.3);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tag:hover, .tag.active {
+      background: rgba(200,169,110,0.2);
+      border-color: var(--accent);
+    }
+
+    /* ── ARTICLE GRID ── */
+    .articles-grid {
+      display: grid;
+      gap: 5px;
+      margin: 32px 0;
+    }
+
+    .article-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .article-card:hover {
+      border-color: rgba(200,169,110,0.3);
+      transform: translateY(-4px);
+    }
+
+    .article-date {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .article-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .article-summary {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .article-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .article-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .like-btn, .dislike-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .like-btn:hover, .dislike-btn:hover {
+      color: var(--accent);
+    }
+
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 32px 0;
+    }
+
+    .page-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .page-btn:hover, .page-btn.active {
+      background: rgba(200,169,110,0.2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── BUTTON ── */
+    .btn {
+      background: var(--accent-dim);
+      border: 1px solid rgba(200,169,110,0.4);
+      color: var(--accent);
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: rgba(200,169,110,0.2);
+      border-color: var(--accent);
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    .btn.primary:hover {
+      background: rgba(200,169,110,0.9);
+    }
+
+    /* ── FORM ── */
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .input-group input,
+    .input-group textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s;
+      direction: rtl;
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus {
+      border-color: rgba(200,169,110,0.4);
+    }
+
+    .input-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .input-group input::placeholder,
+    .input-group textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ── NEWSLETTER ── */
+    .newsletter {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 24px 0;
+      text-align: right;
+    }
+
+    .newsletter h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+
+    .newsletter p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      max-width: none;
+      margin: 0;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .newsletter-form .btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .newsletter-form input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ── PROFILE SECTION ── */
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 32px;
+      align-items: start;
+      margin-bottom: 16px;
+    }
+
+    .about-left {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .profile-image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .about-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+    }
+
+    .about-right h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .about-right p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .career-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin: 28px 0 16px;
+    }
+
+    /* ── CAREER TIMELINE ── */
+    .career-timeline {
+      position: relative;
+      padding-right: 24px;
+    }
+
+    .career-timeline::before {
+      content: '';
+      position: absolute;
+      right: 5px;
+      top: 6px;
+      bottom: 6px;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .career-item {
+      position: relative;
+      padding-bottom: 24px;
+    }
+
+    .career-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .career-item::before {
+      content: '';
+      position: absolute;
+      right: -24px;
+      top: 4px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--bg);
+    }
+
+    .career-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .career-item-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .career-item-year {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .career-item-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* ── SKILLS GRID ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin: 32px 0;
+    }
+
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .skill-card:hover {
+      border-color: rgba(200,169,110,0.3);
+      transform: translateY(-4px);
+    }
+
+    .skill-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .skill-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .skill-description {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 32px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: auto;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--accent-glow);
+    }
+
+    /* ── LOADING ── */
+    .loading {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-secondary);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header {
+        padding: 0 16px;
+        height: 56px;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .hamburger-btn {
+        display: flex;
+      }
+
+      header {
+        position: sticky;
+      }
+
+      main {
+        padding: 32px 16px 60px;
+      }
+
+      .about-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-image {
+        max-width: 220px;
+        margin: 0 auto;
+      }
+
+      .about-stats-grid {
+        max-width: 320px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .article-card {
+        padding: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 22px;
+      }
+
+      .logo-text {
+        font-size: 14px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="logo" onclick="goToPage('articles')">
+      <div>
+        <div class="logo-text">فرهاد کریم‌زاده</div>
+        <div class="logo-text-en">Farhad Karimzadeh</div>
+      </div>
+    </div>
+    <nav id="nav">
+      <a onclick="goToPage('articles')">مقالات</a>
+      <a onclick="goToPage('about')">درباره من</a>
+      <a onclick="goToPage('skills')">مهارت‌ها</a>
+      <a onclick="goToPage('projects')">پروژه‌ها</a>
+      <a onclick="goToPage('applications')">اپلیکیشن‌ها</a>
+      <a onclick="goToPage('collaboration')">همکاری با من</a>
+      <a onclick="goToPage('contact')">تماس</a>
+    </nav>
+    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="منو">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- ARTICLES PAGE -->
+    <div id="articles" class="page active">
+      <div class="hero">
+        <div class="hero-eyebrow hero-eyebrow-right">مقالات</div>
+        <h1>سایت <span>رسمی</span></h1>
+        <p>مهندس فرهاد کریم زاده</p>
+        <p>تجربه‌ها، ایده‌ها، آموخته‌ها و دلنوشته‌های‌م را اینجا می‌نویسم</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" id="articlesStats"></div>
+
+      <!-- Filters -->
+      <div class="tags-container" id="tagFilters"></div>
+
+      <!-- Articles List -->
+      <div id="articlesList" class="articles-grid"></div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
+
+      <!-- Newsletter -->
+      <div class="newsletter">
+        <h3>خبرنامه هفتگی</h3>
+        <p>آخرین مقالات و خبرهای فنی را دریافت کنید</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="ایمیل شما" id="newsletterEmail">
+          <button class="btn primary" onclick="subscribeNewsletter()">عضویت</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTICLE DETAIL PAGE -->
+    <div id="article-detail" class="page">
+      <div id="articleDetail"></div>
+      <div style="margin-top: 32px; display: flex; gap: 12px; justify-content: center;">
+        <button class="like-btn" onclick="likeArticle()">👍 <span id="likeCount">0</span></button>
+        <button class="dislike-btn" onclick="dislikeArticle()">👎 <span id="dislikeCount">0</span></button>
+      </div>
+      <div style="margin-top: 32px; text-align: center;">
+        <button class="btn" onclick="goToPage('articles')">بازگشت به مقالات</button>
+      </div>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div id="about" class="page">
+      <div class="hero">
+        <div class="hero-eyebrow hero-eyebrow-right">درباره</div>
+        <h1>درباره <span>من</span></h1>
+      </div>
+
+      <div class="about-layout">
+        <div class="about-left">
+          <div class="profile-image">
+            <img id="profileImg" src="https://via.placeholder.com/200" alt="پروفایل">
+          </div>
+          <div class="about-stats-grid" id="aboutStats"></div>
+        </div>
+        <div class="about-right">
+          <h2 id="storyTitle">قصه‌ی من</h2>
+          <div id="storyContent"></div>
+
+          <div class="career-title">مسیر حرفه‌ای</div>
+          <div id="careerPath" class="career-timeline"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKILLS PAGE -->
+    <div id="skills" class="page">
+      <div class="hero">
+        <div class="hero-eyebrow hero-eyebrow-right">مهارت‌ها</div>
+        <h1><span>تخصص</span>‌ها</h1>
+      </div>
+
+      <div class="skills-grid" id="specializations"></div>
+
+      <div class="card" style="margin-top: 32px;">
+        <div class="card-title">ابزارها و تکنولوژی‌ها</div>
+        <div class="tags-container" id="technologies"></div>
+      </div>
+    </div>
+
+    <!-- PROJECTS PAGE -->
+    <div id="projects" class="page">
+      <div class="hero">
+        <div class="hero-eyebrow hero-eyebrow-right">پروژه‌ها</div>
+        <h1>نمونه <span>کار</span>‌ها</h1>
+      </div>
+
+      <div class="hero" style="margin-bottom: 32px;">
+        <h2 style="font-size: 22px; color: var(--accent); margin: 0;">پروژهای انجام شده</h2>
+      </div>
+
+      <div id="projectsList" class="articles-grid"></div>
+      <div class="pagination" id="projectPagination"></div>
+
+      <div class="card" style="margin-top: 32px;">
+        <div class="card-title">پروژه های در حال انجام</div>
+        <div class="tags-container" id="inProgressProjects"></div>
+      </div>
+    </div>
+
+    <!-- APPLICATIONS PAGE -->
+    <div id="applications" class="page">
+      <div class="hero">
+        <div class="hero-eyebrow hero-eyebrow-right">اپلیکیشن‌ها</div>
+        <h1>نرم‌<span>افزار</span>‌ها</h1>
+      </div>
+
+      <div class="hero" style="margin-bottom: 32px;">
+        <h2 style="font-size: 20px; color: var(--accent); margin: 0;">برنامه‌های لانچ شده</h2>
+      </div>
+
+      <div id="applicationsList" class="skills-grid"></div>
+    </div>
+
+    <!-- COLLABORATION PAGE -->
+    <div id="collaboration" class="page">
+      <div class="hero">
+        <div class="hero-eyebrow hero-eyebrow-right">همکاری</div>
+        <h1>همکاری <span>با من</span></h1>
+      </div>
+
+      <div class="hero" style="margin-bottom: 32px;">
+        <h2 style="font-size: 20px; color: var(--accent); margin: 0;">همکاری در پروژه‌ها</h2>
+      </div>
+
+      <div id="servicesList" class="skills-grid"></div>
+
+      <div class="newsletter">
+        <h3>شروع همکاری</h3>
+        <div class="newsletter-form">
+          <p style="margin: 0; flex: 1;">برای شروع همکاری یا اطلاعات بیشتر درباره خدمات من تماس بگیرید</p>
+          <button class="btn primary" onclick="goToPage('contact')">با من در تماس باشید</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT PAGE -->
+    <div id="contact" class="page">
+      <div class="hero">
+        <div class="hero-eyebrow hero-eyebrow-right">تماس</div>
+        <h1>تماس <span>با من</span></h1>
+      </div>
+
+      <div class="card">
+        <form onsubmit="sendMessage(event)">
+          <div class="input-group">
+            <label>نام</label>
+            <input type="text" id="contactName" required>
+          </div>
+          <div class="input-group">
+            <label>ایمیل</label>
+            <input type="email" id="contactEmail" required>
+          </div>
+          <div class="input-group">
+            <label>موضوع</label>
+            <input type="text" id="contactSubject" required>
+          </div>
+          <div class="input-group">
+            <label>پیام</label>
+            <textarea id="contactMessage" required></textarea>
+          </div>
+          <button type="submit" class="btn primary" style="width: 100%;">ارسال پیام</button>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top: 32px;">
+        <div class="card-title">راه‌های تماس</div>
+        <div id="contactInfo" class="card-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    © ۱۴۰۴ تمامی حقوق محفوظ است &nbsp;|&nbsp; طراحی توسط
+    <a href="https://www.karimzaadeh.ir" target="_blank">فرهاد کریم‌زاده</a>
+    &nbsp;|&nbsp;
+    <a href="https://www.karimzaadeh.ir" target="_blank">www.karimzaadeh.ir</a>
+  </footer>
+
+  <script>
+    // ─ CONFIG
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyn-6kY8EfYzNOyQwg-g2IiTctSUHKtSd1JcFvRcxG_2HYpwE8P0wEvESZgvI8QG3SNrA/exec'; // Replace with your deployment URL
+    
+
+    // ─ STATE
+    let currentPage = 'articles';
+    let currentArticlePage = 1;
+    let currentProjectPage = 1;
+    let articles = [];
+    let projects = [];
+    let allTags = [];
+    let selectedTag = 'همه';
+    let currentArticleId = null;
+
+    // ─ INIT
+    window.addEventListener('DOMContentLoaded', () => {
+      loadArticles();
+      loadAbout();
+      loadSkills();
+      loadProjects();
+      loadApplications();
+      loadCollaboration();
+      loadContact();
+    });
+
+    // ─ PAGE NAVIGATION
+    function toggleMobileNav() {
+      document.getElementById('nav').classList.toggle('mobile-open');
+    }
+
+    function goToPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(page).classList.add('active');
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('nav').classList.remove('mobile-open');
+      
+      if (page !== 'article-detail') {
+        currentPage = page;
+        document.querySelector(`nav a[onclick="goToPage('${page}')"]`)?.classList.add('active');
+      }
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ─ FORMAT DATE (روز/ماه/سال شمسی - کوتاه)
+    function formatJalaliShort(dateStr) {
+      if (!dateStr) return '';
+      const str = String(dateStr).trim();
+
+      // Persian digits -> ascii for parsing
+      const toAscii = s => s.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+      const toPersian = n => String(n).replace(/\d/g, x => '۰۱۲۳۴۵۶۷۸۹'[x]);
+      const pad = n => String(n).length < 2 ? '0' + n : String(n);
+
+      // Case 1: value came back as a real Date / ISO / Gregorian string (e.g. from Google Sheets
+      // auto-converting the cell to a date). Convert it properly to Jalali instead of just
+      // re-digitizing the Gregorian numbers.
+      const isGregorianLike = /^\d{4}-\d{1,2}-\d{1,2}/.test(str) || /GMT|UTC|T\d{2}:\d{2}/.test(str);
+      if (isGregorianLike) {
+        const dateObj = new Date(str);
+        if (!isNaN(dateObj.getTime())) {
+          const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+          const parts = new Intl.DateTimeFormat('fa-IR-u-nu-latn', options).formatToParts(dateObj);
+          const get = type => parts.find(p => p.type === type)?.value || '';
+          const y = get('year'), m = get('month'), d = get('day');
+          return `${toPersian(pad(d))}/${toPersian(pad(m))}/${toPersian(y)}`;
+        }
+      }
+
+      // Case 2: plain text Jalali date string like "۱۴۰۵/۰۳/۳۰" or "1405/03/30"
+      const asciiStr = toAscii(str);
+      const match = asciiStr.match(/(\d{1,4})\D(\d{1,2})\D(\d{1,4})/);
+      if (!match) return str;
+      let [, p1, m, p2] = match;
+      // Whichever part has 4 digits (or is the larger number) is the year
+      let y, d;
+      if (p1.length === 4 || (p2.length !== 4 && parseInt(p1) > 31)) {
+        y = p1; d = p2;
+      } else {
+        y = p2; d = p1;
+      }
+      return `${toPersian(pad(d))}/${toPersian(pad(m))}/${toPersian(y)}`;
+    }
+
+    // ─ FETCH FROM GOOGLE SHEETS
+    async function fetchData(action, params = {}) {
+      try {
+        const url = new URL(APPS_SCRIPT_URL);
+        url.searchParams.append('action', action);
+        Object.entries(params).forEach(([k, v]) => url.searchParams.append(k, v));
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+      } catch (e) {
+        console.error('Error fetching data:', e);
+        return null;
+      }
+    }
+
+    // ─ ARTICLES
+    async function loadArticles(page = 1, tag = 'همه') {
+      const data = await fetchData('getArticles', { page: page.toString(), tag: tag });
+      if (!data || data.error) {
+        document.getElementById('articlesList').innerHTML = '<p>خطا در بارگیری مقالات</p>';
+        return;
+      }
+
+      articles = data.articles || [];
+      
+      // Load tags
+      const tagsData = await fetchData('getTags');
+      allTags = tagsData.tags || [];
+      renderTagFilters();
+
+      // Load stats
+      const stats = await fetchData('getStats');
+      renderStats(stats);
+
+      // Render articles
+      renderArticles(articles);
+
+      // Render pagination
+      renderPagination(data.totalPages, page, 'articles');
+      
+      selectedTag = tag;
+    }
+
+    function renderArticles(articles) {
+      const html = articles.map(a => `
+        <div class="article-card" onclick="viewArticle(${a.id})">
+          <div class="article-date">${formatJalaliShort(a.date)}</div>
+          <div class="article-title">${a.title}</div>
+          <div class="article-summary">${a.summary}</div>
+          <div class="article-meta">
+            <div>${a.readTime || '۱۰'} دقیقه خواندن</div>
+            <div class="tags-container" style="gap: 4px; margin: 0;">
+              ${(a.tags || '').split(',').map(t => `<span class="tag" style="cursor: default; margin: 0;">${t.trim()}</span>`).join('')}
+            </div>
+            <div class="article-actions">
+              <button class="like-btn" onclick="event.stopPropagation(); likeArticleCard(${a.id}, this)">👍 <span>${a.likes || 0}</span></button>
+              <button class="dislike-btn" onclick="event.stopPropagation(); dislikeArticleCard(${a.id}, this)">👎 <span>${a.dislikes || 0}</span></button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('articlesList').innerHTML = html || '<p>مقالهای وجود ندارد</p>';
+    }
+
+    function renderTagFilters() {
+      const html = ['همه', ...allTags].map(tag => `
+        <span class="tag ${selectedTag === tag ? 'active' : ''}" onclick="loadArticles(1, '${tag}')">${tag}</span>
+      `).join('');
+      document.getElementById('tagFilters').innerHTML = html;
+    }
+
+    function renderStats(stats) {
+      const statsData = [
+        { num: `+${stats.monthlyReaders || 1}k`, label: 'خواننده ماهانه' },
+        { num: stats.articlesPublished || 0, label: 'مقاله منتشر شده' },
+        { num: `+${stats.yearsExperience || 8} سال`, label: 'سال تجربه' },
+        { num: `+${stats.projectsCompleted || 60}`, label: 'پروژه' }
+      ];
+
+      const html = statsData.map(s => `
+        <div class="stat-card">
+          <div class="stat-number">${s.num}</div>
+          <div class="stat-label">${s.label}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('articlesStats').innerHTML = html;
+      document.getElementById('aboutStats').innerHTML = html;
+    }
+
+    function renderPagination(totalPages, currentPage, type) {
+      const containerId = type === 'articles' ? 'pagination' : 'projectPagination';
+      const container = document.getElementById(containerId);
+      
+      let html = '';
+      for (let i = 1; i <= totalPages; i++) {
+        if (i <= 5 || Math.abs(i - currentPage) <= 1 || i > totalPages - 2) {
+          html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goto${type.charAt(0).toUpperCase() + type.slice(1)}Page(${i})">${i}</button>`;
+        } else if (i === 6 || i === totalPages - 2) {
+          html += '<span>...</span>';
+        }
+      }
+      container.innerHTML = html;
+    }
+
+    function gotoArticlesPage(page) {
+      loadArticles(page, selectedTag);
+    }
+
+    function gotoProjectsPage(page) {
+      loadProjects(page);
+    }
+
+    async function viewArticle(id) {
+      currentArticleId = id;
+      const article = await fetchData('getArticle', { id: id.toString() });
+      
+      if (!article || article.error) {
+        alert('خطا در بارگیری مقاله');
+        return;
+      }
+
+      const html = `
+        <div class="card">
+          <div class="article-date">${formatJalaliShort(article.date)}</div>
+          <h1 style="margin: 16px 0; color: var(--text-primary);">${article.title}</h1>
+          <div style="color: var(--text-secondary); margin-bottom: 24px; font-style: italic;">${article.summary}</div>
+          <div style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px;">${article.content || 'محتوای مقاله'}</div>
+          <div style="display: flex; gap: 16px; color: var(--text-muted); font-size: 12px;">
+            <div>${article.readTime || '۱۰'} دقیقه خواندن</div>
+            <div class="tags-container" style="gap: 4px; margin: 0;">
+              ${(article.tags || '').split(',').map(t => `<span class="tag" style="cursor: default; margin: 0;">${t.trim()}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('articleDetail').innerHTML = html;
+      document.getElementById('likeCount').textContent = article.likes || 0;
+      document.getElementById('dislikeCount').textContent = article.dislikes || 0;
+      
+      goToPage('article-detail');
+    }
+
+    async function likeArticle() {
+      if (!currentArticleId) return;
+      const result = await fetchData('addLike', { articleId: currentArticleId.toString() });
+      if (result && result.success) {
+        document.getElementById('likeCount').textContent = result.likes;
+      }
+    }
+
+    async function dislikeArticle() {
+      if (!currentArticleId) return;
+      const result = await fetchData('addDislike', { articleId: currentArticleId.toString() });
+      if (result && result.success) {
+        document.getElementById('dislikeCount').textContent = result.dislikes;
+      }
+    }
+
+    async function likeArticleCard(id, btn) {
+      const result = await fetchData('addLike', { articleId: id.toString() });
+      if (result && result.success) {
+        btn.querySelector('span').textContent = result.likes;
+      }
+    }
+
+    async function dislikeArticleCard(id, btn) {
+      const result = await fetchData('addDislike', { articleId: id.toString() });
+      if (result && result.success) {
+        btn.querySelector('span').textContent = result.dislikes;
+      }
+    }
+
+    async function subscribeNewsletter() {
+      const email = document.getElementById('newsletterEmail').value;
+      if (!email) {
+        alert('ایمیل را وارد کنید');
+        return;
+      }
+
+      const result = await fetchData('subscribeNewsletter', { email });
+      if (result.success) {
+        alert('عضویت موفق!');
+        document.getElementById('newsletterEmail').value = '';
+      }
+    }
+
+    // ─ ABOUT
+    async function loadAbout() {
+      const data = await fetchData('getAbout');
+      if (!data || data.error) return;
+
+      document.getElementById('profileImg').src = data.profileImage || 'https://via.placeholder.com/200';
+      document.getElementById('storyContent').innerHTML = `<p>${data.bio || ''}</p>`;
+
+      const careerEl = document.getElementById('careerPath');
+      const careerRaw = data.careerPath || '';
+      if (/<[a-z][\s\S]*>/i.test(careerRaw)) {
+        // Already contains HTML markup (e.g. career-item rows) — render as-is
+        careerEl.innerHTML = careerRaw;
+      } else {
+        careerEl.innerHTML = `<p style="color: var(--text-secondary); line-height: 1.8;">${careerRaw}</p>`;
+      }
+    }
+
+    // ─ SKILLS
+    async function loadSkills() {
+      const data = await fetchData('getSkills');
+      if (!data || data.error) return;
+
+      // Specializations
+      const specHtml = (data.specializations || []).map(s => `
+        <div class="skill-card">
+          <div class="skill-icon">${s.icon || '⭐'}</div>
+          <div class="skill-name">${s.name}</div>
+          <div class="skill-description">${s.description || ''}</div>
+        </div>
+      `).join('');
+      document.getElementById('specializations').innerHTML = specHtml;
+
+      // Technologies
+      const techHtml = (data.technologies || []).map(t => `
+        <span class="tag">${t.name}</span>
+      `).join('');
+      document.getElementById('technologies').innerHTML = techHtml;
+    }
+
+    // ─ PROJECTS
+    async function loadProjects(page = 1) {
+      const data = await fetchData('getProjects', { page: page.toString() });
+      if (!data || data.error) return;
+
+      projects = data.projects || [];
+
+      const html = projects.map(p => `
+        <div class="article-card">
+          <div class="article-title">${p.title}</div>
+          <div class="article-summary">${p.description}</div>
+          <div class="tags-container" style="gap: 4px; margin: 0;">
+            ${(p.technologies || '').split(',').map(t => `<span class="tag" style="cursor: default; margin: 0;">${t.trim()}</span>`).join('')}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('projectsList').innerHTML = html || '<p>پروژه‌ای وجود ندارد</p>';
+      renderPagination(data.totalPages, page, 'projects');
+
+      // پروژه‌های در حال انجام
+      const inProgress = data.inProgressProjects || [];
+      const inProgressHtml = inProgress.map(p => `
+        <span class="tag" style="cursor: default;" title="${p.description || ''}">${p.title}</span>
+      `).join('');
+      document.getElementById('inProgressProjects').innerHTML = inProgressHtml || '<p style="color: var(--text-secondary); font-size: 13px;">در حال حاضر پروژه‌ای در دست انجام نیست</p>';
+    }
+
+    // ─ APPLICATIONS
+    async function loadApplications() {
+      const data = await fetchData('getApplications');
+      if (!data || data.error) return;
+
+      const html = (data.applications || []).map(a => `
+        <div class="skill-card" onclick="window.open('${a.url}', '_blank')">
+          <div class="skill-icon">${a.icon || '📱'}</div>
+          <div class="skill-name">${a.name}</div>
+          <div class="skill-description">${a.description || ''}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('applicationsList').innerHTML = html;
+    }
+
+    // ─ COLLABORATION
+    async function loadCollaboration() {
+      const data = await fetchData('getCollaboration');
+      if (!data || data.error) return;
+
+      const html = (data.services || []).map(s => `
+        <div class="skill-card">
+          <div class="skill-icon">${s.icon || '🤝'}</div>
+          <div class="skill-name">${s.name}</div>
+          <div class="skill-description">${s.description || 'تماس برای قیمت'}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('servicesList').innerHTML = html;
+    }
+
+    // ─ CONTACT
+    async function loadContact() {
+      const data = await fetchData('getContact');
+      if (!data || data.error) return;
+
+      const html = `
+        <div>
+          <p><strong>ایمیل:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
+          <p><strong>تلفن:</strong> <a href="tel:${data.phone}">${data.phone}</a></p>
+          <p><strong>تلگرام:</strong> <a href="https://t.me/${data.telegram}" target="_blank">@${data.telegram}</a></p>
+          <p><strong>گیتهاب:</strong> <a href="https://github.com/${data.github}" target="_blank">${data.github}</a></p>
+          <p><strong>لینکدین:</strong> <a href="https://linkedin.com/in/${data.linkedin}" target="_blank">${data.linkedin}</a></p>
+        </div>
+      `;
+
+      document.getElementById('contactInfo').innerHTML = html;
+    }
+
+    async function sendMessage(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('contactName').value;
+      const email = document.getElementById('contactEmail').value;
+      const subject = document.getElementById('contactSubject').value;
+      const message = document.getElementById('contactMessage').value;
+
+      // For now, just show a success message
+      // In production, you would send this to your backend
+      alert('پیام شما ارسال شد!');
+      
+      document.getElementById('contactName').value = '';
+      document.getElementById('contactEmail').value = '';
+      document.getElementById('contactSubject').value = '';
+      document.getElementById('contactMessage').value = '';
+    }
+
+    // Set initial active nav
+    document.querySelector("nav a[onclick=\"goToPage('articles')\"]").classList.add('active');
+  </script>
+</body>
+</html>
