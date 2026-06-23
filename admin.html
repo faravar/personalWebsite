@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پنل مدیریت - سایت شخصی</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/iranian-sans@v5.0.3/dist/font-face.css">
+
+  <style>
+    :root {
+      --bg: #0d0d0f;
+      --surface: #16161a;
+      --surface2: #1e1e24;
+      --border: rgba(255,255,255,0.07);
+      --accent: #c8a96e;
+      --text-primary: #f0ece4;
+      --text-secondary: #8a8578;
+      --green: #5db88a;
+      --red: #e05c5c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'IranSans', 'Vazirmatn', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 28px; margin-bottom: 32px; color: var(--accent); }
+
+    /* LOGIN */
+    #loginModal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .login-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .login-subtitle { font-size: 13px; color: var(--text-secondary); text-align: center; margin-bottom: 24px; }
+
+    .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
+    label { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px; }
+
+    input, textarea, select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: rgba(200,169,110,0.4);
+    }
+
+    .captcha-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .captcha-question { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border: 1px solid var(--accent);
+      flex: 1;
+    }
+
+    .btn-primary:hover { background: rgba(200,169,110,0.9); }
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--accent);
+      border: 1px solid rgba(200,169,110,0.3);
+    }
+
+    .btn-danger {
+      background: rgba(224,92,92,0.2);
+      color: var(--red);
+      border: 1px solid rgba(224,92,92,0.3);
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: none;
+      font-size: 13px;
+    }
+
+    .message.success {
+      background: rgba(93,184,138,0.2);
+      color: var(--green);
+      display: block;
+    }
+
+    .message.error {
+      background: rgba(224,92,92,0.2);
+      color: var(--red);
+      display: block;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .form-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .form-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group-full { grid-column: 1 / -1; }
+    textarea { resize: vertical; min-height: 100px; }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .list-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .list-item-content { flex: 1; }
+    .list-item-title { font-weight: 600; margin-bottom: 4px; }
+    .list-item-description { font-size: 12px; color: var(--text-secondary); }
+
+    .list-item-actions { display: flex; gap: 8px; }
+
+    .emoji-picker {
+      position: absolute;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      max-width: 300px;
+      z-index: 100;
+      display: none;
+    }
+
+    .emoji-picker.active { display: block; }
+    .emoji-list {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+
+    .emoji-item {
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .emoji-item:hover {
+      background: var(--surface2);
+    }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 40px;
+      border-radius: 12px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .tabs { flex-direction: column; }
+      .login-box { padding: 24px; }
+      .list-item { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGIN -->
+  <div id="loginModal">
+    <div class="login-box">
+      <div class="login-title">🔐 ورود</div>
+      <div class="login-subtitle">به پنل مدیریت سایت</div>
+      
+      <div class="message" id="loginMessage"></div>
+
+      <div class="form-group">
+        <label>رمز عبور</label>
+        <input type="password" id="adminPassword" placeholder="رمز عبور">
+      </div>
+
+      <div class="captcha-box">
+        <div class="captcha-question" id="captchaQuestion"></div>
+        <input type="number" id="captchaAnswer" style="text-align: center;">
+      </div>
+
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="loginAdmin()">ورود</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" style="display: none;">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+        <h1>🔧 پنل مدیریت</h1>
+        <button class="btn btn-secondary" onclick="logout()">خروج</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('articles')">مقالات</button>
+        <button class="tab-btn" onclick="switchTab('about')">درباره</button>
+        <button class="tab-btn" onclick="switchTab('skills')">مهارت‌ها</button>
+        <button class="tab-btn" onclick="switchTab('projects')">پروژه‌ها</button>
+        <button class="tab-btn" onclick="switchTab('applications')">اپلیکیشن‌ها</button>
+        <button class="tab-btn" onclick="switchTab('collaboration')">همکاری</button>
+        <button class="tab-btn" onclick="switchTab('contact')">تماس</button>
+        <button class="tab-btn" onclick="switchTab('aiwriter')">✨ مقاله‌نویس هوشمند</button>
+      </div>
+
+      <!-- ARTICLES -->
+      <div id="articles" class="tab-content active">
+        <div class="form-section">
+          <div class="form-title">📝 افزودن مقاله جدید</div>
+          <div class="message" id="articlesMessage"></div>
+          <div class="form-grid">
+            <div class="form-group form-group-full">
+              <label>عنوان</label>
+              <input type="text" id="articleTitle">
+            </div>
+            <div class="form-group form-group-full">
+              <label>خلاصه</label>
+              <textarea id="articleSummary"></textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label>محتوا</label>
+              <textarea id="articleContent"></textarea>
+            </div>
+            <div class="form-group">
+              <label>تاریخ خورشیدی</label>
+              <input type="text" id="articleDate" readonly style="cursor: pointer; background: var(--surface2); color: var(--text-primary);">
+            </div>
+            <div class="form-group">
+              <label>زمان خواندن (دقیقه)</label>
+              <input type="number" id="articleReadTime">
+            </div>
+            <div class="form-group form-group-full">
+              <label>برچسب‌ها</label>
+              <input type="text" id="articleTags" placeholder="فارکس، توسعه، آموزش">
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveArticle()">✅ ذخیره</button>
+            <button class="btn btn-secondary" onclick="resetArticleForm()">🔄 پاک کردن</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div id="about" class="tab-content">
+        <div class="form-section">
+          <div class="form-title">👤 درباره من</div>
+          <div class="message" id="aboutMessage"></div>
+          <div class="form-grid">
+            <div class="form-group form-group-full">
+              <label>بیوگرافی</label>
+              <textarea id="aboutBio"></textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label>مسیر حرفه‌ای</label>
+              <textarea id="aboutCareerPath"></textarea>
+            </div>
+            <div class="form-group">
+              <label>تصویر پروفایل (URL)</label>
+              <input type="url" id="aboutImage">
+            </div>
+            <div class="form-group">
+              <label>سال‌های تجربه</label>
+              <input type="number" id="aboutYears">
+            </div>
+            <div class="form-group">
+              <label>پروژه‌های انجام‌شده</label>
+              <input type="number" id="aboutProjects">
+            </div>
+            <div class="form-group">
+              <label>مقالات منتشرشده</label>
+              <input type="number" id="aboutArticles">
+            </div>
+            <div class="form-group">
+              <label>خواننده ماهانه</label>
+              <input type="number" id="aboutReaders">
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveAbout()">✅ ذخیره</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div id="skills" class="tab-content">
+        <!-- تخصص‌ها -->
+        <div class="form-section">
+          <div class="form-title">⭐ افزودن تخصص</div>
+          <div class="message" id="skillsMessage"></div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>نام</label>
+              <input type="text" id="skillName">
+            </div>
+            <div class="form-group" style="position: relative;">
+              <label>آیکون (کلیک برای انتخاب)</label>
+              <input type="text" id="skillIcon" placeholder="⭐" onclick="toggleEmojiPicker('skill')" readonly style="cursor: pointer;">
+              <div class="emoji-picker" id="skillEmojiPicker">
+                <div class="emoji-list" id="skillEmojiList"></div>
+              </div>
+            </div>
+            <div class="form-group form-group-full">
+              <label>توضیح</label>
+              <input type="text" id="skillDescription">
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveSkill()">✅ افزودن</button>
+          </div>
+        </div>
+
+        <!-- تجربیات -->
+        <div class="form-section">
+          <div class="form-title">📊 افزودن تجربه</div>
+          <div class="message" id="experienceMessage"></div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>نام تجربه</label>
+              <input type="text" id="experienceName">
+            </div>
+            <div class="form-group" style="position: relative;">
+              <label>آیکون (کلیک برای انتخاب)</label>
+              <input type="text" id="experienceIcon" placeholder="💡" onclick="toggleEmojiPicker('experience')" readonly style="cursor: pointer;">
+              <div class="emoji-picker" id="experienceEmojiPicker">
+                <div class="emoji-list" id="experienceEmojiList"></div>
+              </div>
+            </div>
+            <div class="form-group form-group-full">
+              <label>توضیح</label>
+              <input type="text" id="experienceDescription">
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveExperience()">✅ افزودن</button>
+          </div>
+
+          <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+            <div class="form-title">تجربیات موجود</div>
+            <div id="experienceList" style="color: var(--text-secondary);">درحال بارگیری...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECTS -->
+      <div id="projects" class="tab-content">
+        <!-- پروژه‌های معمولی -->
+        <div class="form-section">
+          <div class="form-title">🚀 افزودن پروژه</div>
+          <div class="message" id="projectsMessage"></div>
+          <div class="form-grid">
+            <div class="form-group form-group-full">
+              <label>عنوان</label>
+              <input type="text" id="projectTitle">
+            </div>
+            <div class="form-group form-group-full">
+              <label>توضیح</label>
+              <textarea id="projectDescription"></textarea>
+            </div>
+            <div class="form-group">
+              <label>آدرس</label>
+              <input type="url" id="projectUrl">
+            </div>
+            <div class="form-group form-group-full">
+              <label>تکنولوژی‌ها</label>
+              <input type="text" id="projectTechnologies">
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveProject()">✅ ذخیره</button>
+            <button class="btn btn-secondary" onclick="resetProjectForm()">🔄 پاک کردن</button>
+          </div>
+        </div>
+
+        <!-- پروژه‌های درحال انجام -->
+        <div class="form-section">
+          <div class="form-title">⏳ افزودن پروژه درحال انجام</div>
+          <div class="message" id="inProgressMessage"></div>
+          <div class="form-grid">
+            <div class="form-group form-group-full">
+              <label>عنوان پروژه</label>
+              <input type="text" id="inProgressTitle">
+            </div>
+            <div class="form-group form-group-full">
+              <label>توضیح</label>
+              <textarea id="inProgressDescription"></textarea>
+            </div>
+            <div class="form-group">
+              <label>آدرس</label>
+              <input type="url" id="inProgressUrl">
+            </div>
+            <div class="form-group form-group-full">
+              <label>تکنولوژی‌ها</label>
+              <input type="text" id="inProgressTechnologies">
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveInProgress()">✅ افزودن</button>
+          </div>
+
+          <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+            <div class="form-title">پروژه‌های درحال انجام موجود</div>
+            <div id="inProgressList" style="color: var(--text-secondary);">درحال بارگیری...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPLICATIONS -->
+      <div id="applications" class="tab-content">
+        <div class="form-section">
+          <div class="form-title">📱 افزودن اپلیکیشن</div>
+          <div class="message" id="applicationsMessage"></div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>نام</label>
+              <input type="text" id="appName">
+            </div>
+            <div class="form-group" style="position: relative;">
+              <label>آیکون (کلیک برای انتخاب)</label>
+              <input type="text" id="appIcon" placeholder="📱" onclick="toggleEmojiPicker('app')" readonly style="cursor: pointer;">
+              <div class="emoji-picker" id="appEmojiPicker">
+                <div class="emoji-list" id="appEmojiList"></div>
+              </div>
+            </div>
+            <div class="form-group form-group-full">
+              <label>توضیح</label>
+              <textarea id="appDescription"></textarea>
+            </div>
+            <div class="form-group form-group-full">
+              <label>آدرس</label>
+              <input type="url" id="appUrl">
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveApplication()">✅ ذخیره</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLABORATION -->
+      <div id="collaboration" class="tab-content">
+        <div class="form-section">
+          <div class="form-title">🤝 افزودن خدمت</div>
+          <div class="message" id="collaborationMessage"></div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>نام</label>
+              <input type="text" id="serviceName">
+            </div>
+            <div class="form-group" style="position: relative;">
+              <label>آیکون (کلیک برای انتخاب)</label>
+              <input type="text" id="serviceIcon" placeholder="🤝" onclick="toggleEmojiPicker('service')" readonly style="cursor: pointer;">
+              <div class="emoji-picker" id="serviceEmojiPicker">
+                <div class="emoji-list" id="serviceEmojiList"></div>
+              </div>
+            </div>
+            <div class="form-group form-group-full">
+              <label>توضیح</label>
+              <textarea id="serviceDescription"></textarea>
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveService()">✅ ذخیره</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div id="contact" class="tab-content">
+        <div class="form-section">
+          <div class="form-title">📞 تماس</div>
+          <div class="message" id="contactMessage"></div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>ایمیل</label>
+              <input type="email" id="contactEmail">
+            </div>
+            <div class="form-group">
+              <label>تلفن</label>
+              <input type="text" id="contactPhone">
+            </div>
+            <div class="form-group">
+              <label>تلگرام</label>
+              <input type="text" id="contactTelegram">
+            </div>
+            <div class="form-group">
+              <label>گیتهاب</label>
+              <input type="text" id="contactGithub">
+            </div>
+            <div class="form-group">
+              <label>لینکدین</label>
+              <input type="text" id="contactLinkedin">
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveContact()">✅ ذخیره</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI WRITER -->
+      <div id="aiwriter" class="tab-content">
+        <div class="form-section">
+          <div class="form-title">✨ مقاله‌نویس هوشمند</div>
+          <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">موضوع رو انتخاب کن — Claude مقاله فارسی می‌نویسه و مستقیم به سایتت اضافه می‌شه</p>
+
+          <div class="message" id="aiwriterMessage"></div>
+
+          <div style="margin-bottom: 20px;">
+            <label style="font-size: 13px; font-weight: 500; color: var(--text-secondary); display: block; margin-bottom: 12px;">موضوع مقاله</label>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 12px;">
+              <button class="btn btn-secondary ai-topic-btn" onclick="selectAiTopic('فارکس و معاملات', this)">📈 فارکس</button>
+              <button class="btn btn-secondary ai-topic-btn" onclick="selectAiTopic('برنامه‌نویسی وب', this)">💻 برنامه‌نویسی</button>
+              <button class="btn btn-secondary ai-topic-btn" onclick="selectAiTopic('هوش مصنوعی', this)">🤖 هوش مصنوعی</button>
+              <button class="btn btn-secondary ai-topic-btn" onclick="selectAiTopic('Smart Money Concepts', this)">📊 SMC</button>
+              <button class="btn btn-secondary ai-topic-btn" onclick="selectAiTopic('تکنولوژی', this)">🔧 تکنولوژی</button>
+              <button class="btn btn-secondary ai-topic-btn" onclick="selectAiTopic('custom', this)">✏️ دلخواه</button>
+            </div>
+            <div id="aiCustomWrap" style="display:none;">
+              <input type="text" id="aiCustomTopic" placeholder="موضوع دلخواه را بنویسید..." style="width:100%;">
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="btn btn-primary" id="aiGenBtn" onclick="aiGenerateArticle()" disabled>✨ تولید مقاله</button>
+          </div>
+        </div>
+
+        <div class="form-section" id="aiPreviewSection" style="display:none;">
+          <div class="form-title">👁 پیش‌نمایش مقاله</div>
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;" id="aiPrevTitle"></div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;" id="aiPrevMeta"></div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.7;" id="aiPrevSummary"></div>
+            <div style="font-size: 13px; color: var(--text-primary); line-height: 1.8; max-height: 250px; overflow-y: auto; border-top: 1px solid var(--border); padding-top: 12px;" id="aiPrevContent"></div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-secondary" onclick="aiGenerateArticle()">🔄 مقاله جدید</button>
+            <button class="btn btn-primary" id="aiPostBtn" onclick="aiPostToSite()">🚀 انتشار در سایت</button>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        © ۱۴۰۴ تمامی حقوق محفوظ است &nbsp;|&nbsp; طراحی توسط
+        <a href="https://www.karimzaadeh.ir" target="_blank">فرهاد کریم‌زاده</a>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzP1dWodoLxhpRstBtw4ZxTQU4SReRbI_KgPHe_q2cuDR1iirB13rriOnb3TAkUqEw2Lw/exec';
+    let authToken = localStorage.getItem('adminAuth');
+    let captchaNum1, captchaNum2;
+
+    // ✅ تاریخ جلالی صحیح (تست شده)
+    function getTodayJalali() {
+  const today = new Date();
+  
+  // تنظیم فرمت برای تقویم شمسی و زبان فارسی
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  const jalaliDate = new Intl.DateTimeFormat('fa-IR', options).format(today);
+  
+  return jalaliDate;
+}
+
+// نحوه استفاده:
+//console.log(getTodayJalali()); // خروجی به صورت: ۱۴۰۵/۰۳/۳۰
+
+    // ✅ لیست emoji
+    const emojis = ['⭐', '🚀', '💻', '🎨', '🔧', '📱', '💡', '🏆', '📊', '🌐', '⚡', '🎯', '🔐', '📚', '🎵', '👍', '❤️', '🎉', '📈', '🔥', '✨', '🌟', '💪', '🎬'];
+
+    function toggleEmojiPicker(type) {
+      const picker = document.getElementById(type + 'EmojiPicker');
+      if (picker) picker.classList.toggle('active');
+    }
+
+    function setupEmojiPickers() {
+      ['skill', 'experience', 'app', 'service'].forEach(type => {
+        const list = document.getElementById(type + 'EmojiList');
+        if (list) {
+          list.innerHTML = emojis.map(e => `<div class="emoji-item" onclick="selectEmoji('${type}', '${e}')">${e}</div>`).join('');
+        }
+      });
+    }
+
+    function selectEmoji(type, emoji) {
+      const input = document.getElementById(type + 'Icon');
+      if (input) {
+        input.value = emoji;
+        const picker = document.getElementById(type + 'EmojiPicker');
+        if (picker) picker.classList.remove('active');
+      }
+    }
+
+    function generateCaptcha() {
+      captchaNum1 = Math.floor(Math.random() * 10) + 1;
+      captchaNum2 = Math.floor(Math.random() * 10) + 1;
+      document.getElementById('captchaQuestion').textContent = `${captchaNum1} + ${captchaNum2} = ؟`;
+      document.getElementById('captchaAnswer').value = '';
+    }
+
+    async function loginAdmin() {
+      const password = document.getElementById('adminPassword').value;
+      const captchaAnswer = parseInt(document.getElementById('captchaAnswer').value);
+
+      if (!password) {
+        showLoginMessage('error', 'رمز عبور را وارد کنید');
+        return;
+      }
+
+      if (captchaAnswer !== captchaNum1 + captchaNum2) {
+        showLoginMessage('error', 'کپچا اشتباه است');
+        generateCaptcha();
+        return;
+      }
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL + '?action=checkPassword&password=' + encodeURIComponent(password));
+        const data = await response.json();
+
+        if (data.success) {
+          authToken = password;
+          localStorage.setItem('adminAuth', authToken);
+          document.getElementById('loginModal').style.display = 'none';
+          document.getElementById('adminPanel').style.display = 'block';
+          setupEmojiPickers();
+          loadAllData();
+        } else {
+          showLoginMessage('error', data.message || 'رمز عبور اشتباه است');
+          generateCaptcha();
+        }
+      } catch (e) {
+        showLoginMessage('error', 'خطا: ' + e);
+      }
+    }
+
+    function logout() {
+      authToken = null;
+      localStorage.removeItem('adminAuth');
+      document.getElementById('loginModal').style.display = 'flex';
+      document.getElementById('adminPanel').style.display = 'none';
+      generateCaptcha();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function showMessage(type, message, tabId) {
+      const msgEl = document.getElementById(tabId + 'Message');
+      if (msgEl) {
+        msgEl.textContent = message;
+        msgEl.className = 'message ' + type;
+        setTimeout(() => {
+          msgEl.textContent = '';
+          msgEl.className = 'message';
+        }, 3000);
+      }
+    }
+
+    function showLoginMessage(type, message) {
+      const msgEl = document.getElementById('loginMessage');
+      msgEl.textContent = message;
+      msgEl.className = 'message ' + type;
+    }
+
+    async function loadAllData() {
+      try {
+        const aboutRes = await fetch(APPS_SCRIPT_URL + '?action=getAbout');
+        const aboutData = await aboutRes.json();
+        if (aboutData && !aboutData.error) {
+          document.getElementById('aboutBio').value = aboutData.bio || '';
+          document.getElementById('aboutCareerPath').value = aboutData.careerPath || '';
+          document.getElementById('aboutImage').value = aboutData.profileImage || '';
+          document.getElementById('aboutYears').value = aboutData.yearsExperience || '';
+          document.getElementById('aboutProjects').value = aboutData.projectsCompleted || '';
+          document.getElementById('aboutArticles').value = aboutData.articlesPublished || '';
+          document.getElementById('aboutReaders').value = aboutData.monthlyReaders || '';
+        }
+
+        const contactRes = await fetch(APPS_SCRIPT_URL + '?action=getContact');
+        const contactData = await contactRes.json();
+        if (contactData && !contactData.error) {
+          document.getElementById('contactEmail').value = contactData.email || '';
+          document.getElementById('contactPhone').value = contactData.phone || '';
+          document.getElementById('contactTelegram').value = contactData.telegram || '';
+          document.getElementById('contactGithub').value = contactData.github || '';
+          document.getElementById('contactLinkedin').value = contactData.linkedin || '';
+        }
+
+        loadExperiences();
+        loadInProgressProjects();
+      } catch (e) {
+        console.log('خطا:', e);
+      }
+    }
+
+    async function loadExperiences() {
+      try {
+        const skillsRes = await fetch(APPS_SCRIPT_URL + '?action=getSkills');
+        const skillsData = await skillsRes.json();
+        if (skillsData && skillsData.specializations) {
+          const experiences = skillsData.specializations.filter(s => s.type === 'experience');
+          const html = experiences.map((e, idx) => `
+            <div class="list-item">
+              <div class="list-item-content">
+                <div class="list-item-title">${e.icon || '💡'} ${e.name}</div>
+                <div class="list-item-description">${e.description}</div>
+              </div>
+              <div class="list-item-actions">
+                <button class="btn btn-danger" onclick="deleteExperience('${e.name}')">حذف</button>
+              </div>
+            </div>
+          `).join('');
+          document.getElementById('experienceList').innerHTML = html || '<p style="color: var(--text-secondary);">تجربیاتی موجود نیست</p>';
+        }
+      } catch (e) {
+        console.log('خطا:', e);
+      }
+    }
+
+    async function loadInProgressProjects() {
+      try {
+        const projectsRes = await fetch(APPS_SCRIPT_URL + '?action=getProjects&page=1');
+        const projectsData = await projectsRes.json();
+        if (projectsData && projectsData.projects) {
+          const inProgress = projectsData.projects.filter(p => p.inProgress === 'true' || p.inProgress === true);
+          const html = inProgress.map((p) => `
+            <div class="list-item">
+              <div class="list-item-content">
+                <div class="list-item-title">🚀 ${p.title}</div>
+                <div class="list-item-description">${p.description}</div>
+              </div>
+              <div class="list-item-actions">
+                <button class="btn btn-danger" onclick="deleteInProgress('${p.id}')">حذف</button>
+              </div>
+            </div>
+          `).join('');
+          document.getElementById('inProgressList').innerHTML = html || '<p style="color: var(--text-secondary);">پروژه‌ی درحال انجام موجود نیست</p>';
+        }
+      } catch (e) {
+        console.log('خطا:', e);
+      }
+    }
+
+    async function saveArticle() {
+      const data = {
+        action: 'addArticle',
+        password: authToken,
+        title: document.getElementById('articleTitle').value,
+        summary: document.getElementById('articleSummary').value,
+        content: document.getElementById('articleContent').value,
+        date: document.getElementById('articleDate').value || getTodayJalali(),
+        readTime: document.getElementById('articleReadTime').value,
+        tags: document.getElementById('articleTags').value
+      };
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+        const result = await response.json();
+        if (result.success) {
+          showMessage('success', result.message || 'ذخیره شد', 'articles');
+          resetArticleForm();
+        } else {
+          showMessage('error', result.error || 'خطا', 'articles');
+        }
+      } catch (e) {
+        showMessage('error', 'خطا: ' + e, 'articles');
+      }
+    }
+
+    function resetArticleForm() {
+      document.getElementById('articleTitle').value = '';
+      document.getElementById('articleSummary').value = '';
+      document.getElementById('articleContent').value = '';
+      document.getElementById('articleDate').value = getTodayJalali();
+      document.getElementById('articleReadTime').value = '';
+      document.getElementById('articleTags').value = '';
+    }
+
+    async function saveAbout() {
+      const data = {
+        action: 'updateAbout',
+        password: authToken,
+        bio: document.getElementById('aboutBio').value,
+        careerPath: document.getElementById('aboutCareerPath').value,
+        profileImage: document.getElementById('aboutImage').value,
+        yearsExperience: document.getElementById('aboutYears').value,
+        projectsCompleted: document.getElementById('aboutProjects').value,
+        articlesPublished: document.getElementById('aboutArticles').value,
+        monthlyReaders: document.getElementById('aboutReaders').value
+      };
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+        const result = await response.json();
+        if (result.success) {
+          showMessage('success', 'ذخیره شد', 'about');
+        } else {
+          showMessage('error', result.error || 'خطا', 'about');
+        }
+      } catch (e) {
+        showMessage('error', 'خطا: ' + e, 'about');
+      }
+    }
+
+    async function saveSkill() {
+      const data = {
+        action: 'addSkill',
+        password: authToken,
+        name: document.getElementById('skillName').value,
+        description: document.getElementById('skillDescription').value,
+        icon: document.getElementById('skillIcon').value,
+        type: 'specialization'
+      };
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+        const result = await response.json();
+        if (result.success) {
+          showMessage('success', 'ذخیره شد', 'skills');
+          document.getElementById('skillName').value = '';
+          document.getElementById('skillDescription').value = '';
+          document.getElementById('skillIcon').value = '';
+        } else {
+          showMessage('error', result.error || 'خطا', 'skills');
+        }
+      } catch (e) {
+        showMessage('error', 'خطا: ' + e, 'skills');
+      }
+    }
+
+    async function saveExperience() {
+  const data = {
+    action: 'addSkill',
+    password: authToken,
+    name: document.getElementById('experienceName').value,
+    description: document.getElementById('experienceDescription').value,
+    icon: document.getElementById('experienceIcon').value,
+    type: 'experience'
+  };
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+    const result = await response.json();
+    if (result.success) {
+      showMessage('success', 'ذخیره شد', 'experience');
+      document.getElementById('experienceName').value = '';
+      document.getElementById('experienceDescription').value = '';
+      document.getElementById('experienceIcon').value = '';
+      loadExperiences();
+    } else {
+      showMessage('error', result.error || 'خطا', 'experience');
+    }
+  } catch (e) {
+    showMessage('error', 'خطا: ' + e, 'experience');
+  }
+}
+
+    async function deleteExperience(name) {
+  if (confirm('آیا می‌خواهی این تجربه را حذف کنی؟')) {
+    const data = {
+      action: 'deleteSkill',
+      password: authToken,
+      name: name
+    };
+
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+      const result = await response.json();
+      if (result.success) {
+        showMessage('success', 'حذف شد', 'experience');
+        loadExperiences();
+      } else {
+        showMessage('error', result.error || 'خطا', 'experience');
+      }
+    } catch (e) {
+      showMessage('error', 'خطا: ' + e, 'experience');
+    }
+  }
+}
+
+    async function saveProject() {
+      const data = {
+        action: 'saveProject',
+        password: authToken,
+        title: document.getElementById('projectTitle').value,
+        description: document.getElementById('projectDescription').value,
+        url: document.getElementById('projectUrl').value,
+        technologies: document.getElementById('projectTechnologies').value,
+        inProgress: 'false'
+      };
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+        const result = await response.json();
+        if (result.success) {
+          showMessage('success', 'ذخیره شد', 'projects');
+          resetProjectForm();
+        } else {
+          showMessage('error', result.error || 'خطا', 'projects');
+        }
+      } catch (e) {
+        showMessage('error', 'خطا: ' + e, 'projects');
+      }
+    }
+
+    function resetProjectForm() {
+      document.getElementById('projectTitle').value = '';
+      document.getElementById('projectDescription').value = '';
+      document.getElementById('projectUrl').value = '';
+      document.getElementById('projectTechnologies').value = '';
+    }
+
+   async function saveInProgress() {
+  const data = {
+    action: 'saveProject',
+    password: authToken,
+    title: document.getElementById('inProgressTitle').value,
+    description: document.getElementById('inProgressDescription').value,
+    url: document.getElementById('inProgressUrl').value,
+    technologies: document.getElementById('inProgressTechnologies').value,
+    inProgress: 'true'
+  };
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+    const result = await response.json();
+    if (result.success) {
+      showMessage('success', 'افزوده شد', 'inProgress');
+      document.getElementById('inProgressTitle').value = '';
+      document.getElementById('inProgressDescription').value = '';
+      document.getElementById('inProgressUrl').value = '';
+      document.getElementById('inProgressTechnologies').value = '';
+      loadInProgressProjects();
+    } else {
+      showMessage('error', result.error || 'خطا', 'inProgress');
+    }
+  } catch (e) {
+    showMessage('error', 'خطا: ' + e, 'inProgress');
+  }
+}
+
+    async function deleteInProgress(id) {
+  if (confirm('آیا می‌خواهی این پروژه را حذف کنی؟')) {
+    const data = {
+      action: 'deleteProject',
+      password: authToken,
+      id: id
+    };
+
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+      const result = await response.json();
+      if (result.success) {
+        showMessage('success', 'حذف شد', 'inProgress');
+        loadInProgressProjects();
+      } else {
+        showMessage('error', result.error || 'خطا', 'inProgress');
+      }
+    } catch (e) {
+      showMessage('error', 'خطا: ' + e, 'inProgress');
+    }
+  }
+}
+    async function saveApplication() {
+      const data = {
+        action: 'saveApplication',
+        password: authToken,
+        name: document.getElementById('appName').value,
+        description: document.getElementById('appDescription').value,
+        url: document.getElementById('appUrl').value,
+        icon: document.getElementById('appIcon').value
+      };
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+        const result = await response.json();
+        if (result.success) {
+          showMessage('success', 'ذخیره شد', 'applications');
+          document.getElementById('appName').value = '';
+          document.getElementById('appDescription').value = '';
+          document.getElementById('appUrl').value = '';
+          document.getElementById('appIcon').value = '';
+        } else {
+          showMessage('error', result.error || 'خطا', 'applications');
+        }
+      } catch (e) {
+        showMessage('error', 'خطا: ' + e, 'applications');
+      }
+    }
+
+    async function saveService() {
+      const data = {
+        action: 'saveService',
+        password: authToken,
+        name: document.getElementById('serviceName').value,
+        description: document.getElementById('serviceDescription').value,
+        icon: document.getElementById('serviceIcon').value
+      };
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+        const result = await response.json();
+        if (result.success) {
+          showMessage('success', 'ذخیره شد', 'collaboration');
+          document.getElementById('serviceName').value = '';
+          document.getElementById('serviceDescription').value = '';
+          document.getElementById('serviceIcon').value = '';
+        } else {
+          showMessage('error', result.error || 'خطا', 'collaboration');
+        }
+      } catch (e) {
+        showMessage('error', 'خطا: ' + e, 'collaboration');
+      }
+    }
+
+    async function saveContact() {
+      const data = {
+        action: 'updateContact',
+        password: authToken,
+        email: document.getElementById('contactEmail').value,
+        phone: document.getElementById('contactPhone').value,
+        telegram: document.getElementById('contactTelegram').value,
+        github: document.getElementById('contactGithub').value,
+        linkedin: document.getElementById('contactLinkedin').value
+      };
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+        const result = await response.json();
+        if (result.success) {
+          showMessage('success', 'ذخیره شد', 'contact');
+        } else {
+          showMessage('error', result.error || 'خطا', 'contact');
+        }
+      } catch (e) {
+        showMessage('error', 'خطا: ' + e, 'contact');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      generateCaptcha();
+      const todayJalali = getTodayJalali();
+      const dateInput = document.getElementById('articleDate');
+      if (dateInput) {
+        dateInput.value = todayJalali;
+      }
+
+      if (authToken) {
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        setupEmojiPickers();
+        loadAllData();
+      } else {
+        document.getElementById('loginModal').style.display = 'flex';
+        document.getElementById('adminPanel').style.display = 'none';
+      }
+    });
+
+    // ─ AI WRITER
+    let aiSelectedTopic = '';
+    let aiCurrentArticle = null;
+
+    function selectAiTopic(topic, el) {
+      document.querySelectorAll('.ai-topic-btn').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.07)');
+      el.style.borderColor = 'var(--accent)';
+      el.style.color = 'var(--accent)';
+      const customWrap = document.getElementById('aiCustomWrap');
+      if (topic === 'custom') {
+        customWrap.style.display = 'block';
+        aiSelectedTopic = '';
+        document.getElementById('aiGenBtn').disabled = true;
+      } else {
+        customWrap.style.display = 'none';
+        aiSelectedTopic = topic;
+        document.getElementById('aiGenBtn').disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const customInput = document.getElementById('aiCustomTopic');
+      if (customInput) {
+        customInput.addEventListener('input', function() {
+          aiSelectedTopic = this.value.trim();
+          document.getElementById('aiGenBtn').disabled = !aiSelectedTopic;
+        });
+      }
+    });
+
+    function toJalaliAi(date) {
+      return new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+    }
+
+    async function aiGenerateArticle() {
+      const topic = aiSelectedTopic || document.getElementById('aiCustomTopic').value.trim();
+      if (!topic) { showMessage('error', 'لطفاً یک موضوع انتخاب کنید', 'aiwriter'); return; }
+
+      const btn = document.getElementById('aiGenBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ در حال تولید...';
+      document.getElementById('aiPreviewSection').style.display = 'none';
+      aiCurrentArticle = null;
+
+      const prompt = `یک مقاله کامل و حرفه‌ای فارسی درباره "${topic}" برای یک وبلاگ شخصی بنویس.
+
+مقاله باید دقیقاً به این فرمت JSON باشد (فقط JSON، هیچ متن اضافه‌ای نباشد):
+{
+  "title": "عنوان جذاب مقاله",
+  "summary": "خلاصه ۲-۳ جمله‌ای برای نمایش در لیست مقالات",
+  "content": "متن کامل مقاله با HTML ساده (از تگ‌های h2، p، ul، li، strong استفاده کن). حداقل ۶۰۰ کلمه باشد.",
+  "tags": "تگ۱, تگ۲, تگ۳",
+  "readTime": "X دقیقه"
+}
+
+نکات: مقاله کاملاً فارسی، آموزشی و کاربردی باشد. فقط JSON برگردان.`;
+
+      try {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-6',
+            max_tokens: 1000,
+            messages: [{ role: 'user', content: prompt }]
+          })
+        });
+
+        const data = await resp.json();
+        let rawText = '';
+        for (const block of (data.content || [])) {
+          if (block.type === 'text') rawText += block.text;
+        }
+
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error('فرمت پاسخ نادرست');
+
+        aiCurrentArticle = JSON.parse(jsonMatch[0]);
+        aiCurrentArticle.date = toJalaliAi(new Date());
+
+        document.getElementById('aiPrevTitle').textContent = aiCurrentArticle.title;
+        document.getElementById('aiPrevSummary').textContent = aiCurrentArticle.summary;
+        document.getElementById('aiPrevContent').innerHTML = aiCurrentArticle.content;
+        document.getElementById('aiPrevMeta').innerHTML = `
+          <span style="font-size:12px; padding:3px 10px; border-radius:6px; background:var(--surface2); color:var(--text-secondary);">📅 ${aiCurrentArticle.date}</span>
+          <span style="font-size:12px; padding:3px 10px; border-radius:6px; background:var(--surface2); color:var(--text-secondary);">⏱ ${aiCurrentArticle.readTime}</span>
+          <span style="font-size:12px; padding:3px 10px; border-radius:6px; background:var(--surface2); color:var(--text-secondary);">🏷 ${aiCurrentArticle.tags}</span>
+        `;
+
+        document.getElementById('aiPreviewSection').style.display = 'block';
+        showMessage('success', 'مقاله آماده شد — پیش‌نمایش را بررسی کنید', 'aiwriter');
+      } catch(err) {
+        showMessage('error', 'خطا در تولید مقاله: ' + err.message, 'aiwriter');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '✨ تولید مقاله';
+      }
+    }
+
+    async function aiPostToSite() {
+      if (!aiCurrentArticle) return;
+      const btn = document.getElementById('aiPostBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ در حال انتشار...';
+
+      try {
+        const payload = {
+          action: 'addArticle',
+          password: authToken,
+          title: aiCurrentArticle.title,
+          summary: aiCurrentArticle.summary,
+          content: aiCurrentArticle.content,
+          date: aiCurrentArticle.date,
+          tags: aiCurrentArticle.tags,
+          readTime: aiCurrentArticle.readTime
+        };
+
+        const resp = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const result = await resp.json();
+
+        if (result.success) {
+          showMessage('success', 'مقاله با موفقیت در سایت منتشر شد!', 'aiwriter');
+          document.getElementById('aiPreviewSection').style.display = 'none';
+          aiCurrentArticle = null;
+        } else {
+          throw new Error(result.error || 'خطای ناشناخته');
+        }
+      } catch(err) {
+        showMessage('error', 'خطا در انتشار: ' + err.message, 'aiwriter');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🚀 انتشار در سایت';
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      ['skill', 'experience', 'app', 'service'].forEach(type => {
+        const picker = document.getElementById(type + 'EmojiPicker');
+        const input = document.getElementById(type + 'Icon');
+        if (picker && input && !picker.contains(e.target) && !input.contains(e.target)) {
+          picker.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
