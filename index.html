@@ -1271,7 +1271,7 @@
     }
 
     // ─ FORMAT DATE (روز/ماه/سال شمسی - کوتاه)
-    function formatJalaliShort(dateStr) {
+   function formatJalaliShort(dateStr) {
       if (!dateStr) return '';
       const str = String(dateStr).trim();
 
@@ -1281,14 +1281,15 @@
       const pad = n => String(n).length < 2 ? '0' + n : String(n);
 
       // تاریخ از پنل ادمین همیشه به شکل سال/ماه/روز ذخیره می‌شود (مثل ۱۴۰۵/۰۳/۳۱)
-      // اینجا فقط ترتیب آن به روز/ماه/سال برعکس می‌شود
       const asciiStr = toAscii(str);
       const parts = asciiStr.split(/[\/\-.]/).map(p => p.trim()).filter(Boolean);
       if (parts.length !== 3) return str;
 
       const [y, m, d] = parts;
-      return `${toPersian(pad(d))}/${toPersian(pad(m))}/${toPersian(y)}`;
-    }
+      
+      // اصلاح شد: خروجی به صورت سال/ماه/روز ساخته می‌شود تا در حالت RTL درست دیده شود
+      return `${toPersian(y)}/${toPersian(pad(m))}/${toPersian(pad(d))}`;
+}
 
     // ─ FETCH FROM GOOGLE SHEETS
     async function fetchData(action, params = {}) {
