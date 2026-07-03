@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دستیار روزه‌داری و عبادات</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #f59e0b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+         html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+   
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* ارتفاع فوتر خود را اینجا مشخص کنید */
+}
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        /* بخش تایمر و SVG قوسی */
+        .timer-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 30px;
+        }
+
+        svg {
+            transform: rotate(-90deg); /* شروع حرکت از بالای دایره */
+        }
+
+        .bg-circle {
+            fill: none;
+            stroke: #334155;
+            stroke-width: 8;
+        }
+
+        .progress-arc {
+            fill: none;
+            stroke: var(--accent-color);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .time-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .time-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* بخش دفترچه یادداشت */
+        .notes-section {
+            text-align: right;
+            margin-top: 20px;
+            border-top: 1px solid #334155;
+            padding-top: 20px;
+        }
+
+        .notes-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: var(--text-color);
+            padding: 12px;
+            font-size: 0.95rem;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-color);
+        }
+
+        .status-msg {
+            font-size: 0.8rem;
+            color: #10b981;
+            margin-top: 5px;
+            height: 18px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: auto; /* اگر مایلید همیشه پایین صفحه بماند */
+    font-size: 0.9rem;
+    color: rgba(138,75,42,0.65); /* استفاده از متغیر متنی که در کدها دارید */
+}
+
+.site-footer a {
+    color: rgba(138,75,42,0.65); /* یا هر رنگ شاخصی مثل گلد یا تال که در متغیرها تعریف کردید */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.site-footer a:hover {
+    color: rgba(76,124,144,0.55);  /*تغییر رنگ هنگام هاور */
+    text-decoration: underline;
+    text-decoration: none;
+}
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <h1>دستیار روزه‌داری و افطار</h1>
+        <p class="subtitle">زمان باقی‌مانده تا اذان مغرب و افطار</p>
+
+        <!-- بخش تایمر قوسی -->
+        <div class="timer-container">
+            <svg width="250" height="250" viewBox="0 0 250 250">
+                <!-- دایره پس‌زمینه -->
+                <circle class="bg-circle" cx="125" cy="125" r="110" />
+                <!-- قوس پیشرفت اصلی -->
+                <circle class="progress-arc" id="progressArc" cx="125" cy="125" r="110" />
+            </svg>
+            <div class="timer-text">
+                <div class="time-display" id="countdown">--:--:--</div>
+                <div class="time-label" id="timerLabel">تا افطار</div>
+            </div>
+        </div>
+
+        <!-- بخش یادداشت نیت و دعا -->
+        <div class="notes-section">
+            <h3>یادداشت نیت و دعای امروز</h3>
+            <textarea id="prayerNote" placeholder="دعاهای مدنظر یا کارهای خیری که برای امروز نیت کرده‌اید را اینجا بنویسید..."></textarea>
+            <div class="status-msg" id="statusMsg">ذخیره شد ✓</div>
+        </div>
+    </div>
+
+    <script>
+        // --- تنظیمات انیمیشن SVG قوسی ---
+        const arc = document.getElementById('progressArc');
+        const radius = arc.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius; // محیط دایره: ۲ * ۳.۱۴ * ۱۱۰
+
+        // تنظیم مقدار اولیه dasharray
+        arc.style.strokeDasharray = `${circumference} ${circumference}`;
+        arc.style.strokeDashoffset = circumference;
+
+        function setProgress(percent) {
+            // معکوس کردن درصد برای کاهش اصولی طول خط (محیط)
+            const offset = circumference - (percent / 100) * circumference;
+            arc.style.strokeDashoffset = offset;
+        }
+
+        // --- منطق زمان‌بندی و محاسبه (شبیه‌سازی اوقات شرعی) ---
+        // برای نمونه، زمان افطار را روی ساعت ۲۰:۳۰ امشب تنظیم می‌کنیم
+        function getTargetTime() {
+            const now = new Date();
+            const target = new Date();
+            target.setHours(20, 30, 0, 0); // ساعت ۲۰:۳۰
+
+            // اگر زمان حال از ۸:۳۰ شب گذشته باشد، زمان هدف را برای فردا تنظیم کن
+            if (now > target) {
+                target.setDate(target.getDate() + 1);
+            }
+            return target;
+        }
+
+        const targetTime = getTargetTime();
+        // فرض می‌کنیم کل بازه شمارش معکوس از صبح (مثلاً ساعت ۴:۳۰ بامداد) شروع شده است
+        const startTime = new Date(targetTime);
+        startTime.setHours(4, 30, 0, 0); 
+        if (startTime > targetTime) startTime.setDate(startTime.getDate() - 1);
+
+        const totalDuration = targetTime - startTime;
+
+        function updateTimer() {
+            const now = new Date();
+            const timeLeft = targetTime - now;
+
+            if (timeLeft <= 0) {
+                document.getElementById('countdown').innerText = "۰۰:۰۰:۰۰";
+                document.getElementById('timerLabel').innerText = "وقت افطار است! طاعات قبول";
+                setProgress(100);
+                clearInterval(timerInterval);
+                return;
+            }
+
+            // محاسبه ساعت، دقیقه و ثانیه
+            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            // فرمت‌دهی دو رقمی با اعداد فارسی یا انگلیسی (اینجا انگلیسی استاندارد)
+            const pad = (num) => String(num).padStart(2, '0');
+            document.getElementById('countdown').innerText = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+
+            // محاسبه درصد طی شده برای تغییر قوس SVG
+            const timePassed = now - startTime;
+            const progressPercent = Math.min((timePassed / totalDuration) * 100, 100);
+            setProgress(progressPercent);
+        }
+
+        // اجرای اولیه و تنظیم اینتروال ثانیه‌ای
+        updateTimer();
+        const timerInterval = setInterval(updateTimer, 1000);
+
+
+        // --- منطق دفترچه یادداشت (با قابلیت ذخیره خودکار) ---
+        const textarea = document.getElementById('prayerNote');
+        const statusMsg = document.getElementById('statusMsg');
+        let saveTimeout;
+
+        // بارگذاری یادداشت ذخیره شده قبلی از حافظه مرورگر
+        if (localStorage.getItem('savedPrayerNote')) {
+            textarea.value = localStorage.getItem('savedPrayerNote');
+        }
+
+        // سیستم لرزش‌گیر (Debounce) برای ذخیره خودکار هنگام تایپ کاربر
+        textarea.addEventListener('input', () => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem('savedPrayerNote', textarea.value);
+                
+                // نمایش پیام موفقیت‌آمیز بودن ذخیره
+                statusMsg.style.opacity = '1';
+                setTimeout(() => {
+                    statusMsg.style.opacity = '0';
+                }, 1500);
+            }, 800); // ۸۰۰ میلی‌ثانیه بعد از آخرین تایپ ذخیره می‌کند
+        });
+    </script>
+</body>
+<footer class="site-footer">
+    <p> <a href="https://www.karimzaadeh.ir" target="_blank" rel="noopener noreferrer">فرهاد کریم‌زاده | Farhad Karimzadeh</a></p>
+</footer>
+</html>
