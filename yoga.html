@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>تنفس یوگا | پرانایاما  </title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#1a2740;
+    --bg-2:#241c38;
+    --bg-3:#2e1f3d;
+    --card:rgba(255,255,255,0.045);
+    --card-border:rgba(255,255,255,0.09);
+    --text:#f3ede2;
+    --text-dim:#a79fbb;
+    --gold:#d9a857;
+    --teal:#6fae9c;
+    --rose:#c97b84;
+    --ring-idle:rgba(255,255,255,0.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Vazirmatn', sans-serif;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(217,168,87,0.16), transparent 45%),
+      linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%);
+    color:var(--text);
+    min-height:100%;
+    display:flex;
+    justify-content:center;
+    padding:28px 16px 60px;
+  }
+  .app{ width:100%; max-width:440px; display:flex; flex-direction:column; gap:18px; }
+
+  .brand{ text-align:center; margin-bottom:6px; }
+  .brand h1{
+    font-size:28px; font-weight:800; letter-spacing:1px;
+    background:linear-gradient(90deg, var(--gold), var(--rose));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .brand p{ font-size:13px; color:var(--text-dim); margin-top:4px; font-weight:500; }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:24px;
+    padding:24px 20px;
+    backdrop-filter:blur(14px);
+    box-shadow:0 20px 40px -20px rgba(0,0,0,0.5);
+  }
+
+  /* ---- Session card ---- */
+  .session{ display:flex; flex-direction:column; align-items:center; gap:18px; }
+  .phase-label{ font-size:15px; font-weight:600; color:var(--text-dim); min-height:20px; transition:color .3s ease; }
+  .phase-label.dam{ color:var(--gold); }
+  .phase-label.negahdasht{ color:var(--teal); }
+  .phase-label.bazdam{ color:var(--rose); }
+
+  .ring-wrap{ position:relative; width:224px; height:224px; }
+  .ring-wrap svg{ position:absolute; inset:0; transform:rotate(0deg); }
+  .ring-wrap circle{
+    fill:none; stroke-width:5; stroke-linecap:round;
+    transition:stroke .35s ease, opacity .35s ease;
+  }
+  .arc-pending{ stroke:var(--ring-idle); opacity:1; }
+  .arc-active{ opacity:1; animation:pulseArc 1.6s ease-in-out infinite; }
+  .arc-done{ opacity:1; }
+  @keyframes pulseArc{ 0%,100%{opacity:.55} 50%{opacity:1} }
+
+  button.breath-btn{
+    position:absolute; inset:22px;
+    border-radius:50%;
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+    background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+    color:var(--text);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:4px;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.08) inset, 0 10px 30px -10px rgba(0,0,0,0.6);
+    transition:box-shadow .4s ease, background .4s ease;
+  }
+  button.breath-btn:active{ transform:scale(0.97); }
+  button.breath-btn.breathing{ animation:breathe 4.2s ease-in-out infinite; }
+  @keyframes breathe{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.045);} }
+
+  button.breath-btn.glow-dam{ box-shadow:0 0 0 1px rgba(217,168,87,0.5) inset, 0 0 40px -6px rgba(217,168,87,0.55); }
+  button.breath-btn.glow-negahdasht{ box-shadow:0 0 0 1px rgba(111,174,156,0.5) inset, 0 0 40px -6px rgba(111,174,156,0.55); }
+  button.breath-btn.glow-bazdam{ box-shadow:0 0 0 1px rgba(201,123,132,0.5) inset, 0 0 40px -6px rgba(201,123,132,0.55); }
+
+  .timer{ font-size:34px; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:0.5px; }
+  .btn-caption{ font-size:12px; color:var(--text-dim); font-weight:500; }
+
+  .hint{ font-size:13px; color:var(--text-dim); text-align:center; min-height:18px; line-height:1.6; }
+
+  /* ---- History card ---- */
+  .history-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .history-head h2{ font-size:16px; font-weight:700; }
+  .history-head h2 span{ color:var(--text-dim); font-weight:500; font-size:12px; }
+  .clear-btn{
+    border:1px solid var(--card-border); background:transparent; color:var(--text-dim);
+    font-family:inherit; font-size:12px; padding:6px 10px; border-radius:10px; cursor:pointer;
+    transition:all .2s ease;
+  }
+  .clear-btn.confirming{ color:var(--rose); border-color:rgba(201,123,132,0.5); }
+
+  .table-wrap{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  thead th{
+    text-align:center; color:var(--text-dim); font-weight:600; font-size:11px;
+    padding:6px 4px; border-bottom:1px solid var(--card-border);
+    white-space:nowrap;
+  }
+  tbody td{ text-align:center; padding:9px 4px; border-bottom:1px solid rgba(255,255,255,0.05); white-space:nowrap; }
+  tbody tr:last-child td{ border-bottom:none; }
+  td.dam-c{ color:var(--gold); font-weight:600; }
+  td.neg-c{ color:var(--teal); font-weight:600; }
+  td.baz-c{ color:var(--rose); font-weight:600; }
+  td.total-c{ font-weight:700; }
+  td.date-c{ color:var(--text-dim); font-size:11px; }
+
+  .empty-state{ text-align:center; color:var(--text-dim); font-size:13px; padding:20px 0; line-height:1.8; }
+
+  .site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: auto; /* اگر مایلید همیشه پایین صفحه بماند */
+    font-size: 0.9rem;
+    color: var(--text-dim, #a79fbb); /* استفاده از متغیر متنی که در کدها دارید */
+}
+
+.site-footer a {
+    color: var(--teal, #0ef); /* یا هر رنگ شاخصی مثل گلد یا تال که در متغیرها تعریف کردید */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.site-footer a:hover {
+    color: #ffffff; /* تغییر رنگ هنگام هاور */
+    text-decoration: underline;
+    text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="brand">
+    <h1>تمرین تنفس (پرانایاما)</h1>
+    <p>تمرین آگاهانه‌ی دم، نگه‌داشت و بازدم</p>
+  </div>
+
+  <div class="card session">
+    <div id="phaseLabel" class="phase-label">برای شروع لمس کن</div>
+
+    <div class="ring-wrap">
+      <svg viewBox="0 0 224 224">
+        <circle id="arcDam" class="arc-pending" cx="112" cy="112" r="102"
+          stroke="var(--gold)" stroke-dasharray="199 630" transform="rotate(-90 112 112)"/>
+        <circle id="arcNeg" class="arc-pending" cx="112" cy="112" r="102"
+          stroke="var(--teal)" stroke-dasharray="199 630" transform="rotate(30 112 112)"/>
+        <circle id="arcBaz" class="arc-pending" cx="112" cy="112" r="102"
+          stroke="var(--rose)" stroke-dasharray="199 630" transform="rotate(150 112 112)"/>
+      </svg>
+      <button id="breathBtn" class="breath-btn breathing">
+        <span id="timer" class="timer">۰۰:۰۰.۰</span>
+        <span id="caption" class="btn-caption">شروع</span>
+      </button>
+    </div>
+
+    <div id="hint" class="hint">با لمس دگمه، دم را آغاز کن</div>
+  </div>
+
+  <div class="card">
+    <div class="history-head">
+      <h2>تمرین‌های اخیر <span>(۱۰ مورد آخر)</span></h2>
+      <button id="clearBtn" class="clear-btn">پاک کردن</button>
+    </div>
+    <div id="tableWrap" class="table-wrap"></div>
+  </div>
+  <footer class="site-footer">
+    <p> <a href="https://www.karimzaadeh.ir" target="_blank" rel="noopener noreferrer">فرهاد کریم‌زاده | Farhad Karimzadeh</a></p>
+</footer>
+</div>
+
+<script>
+(function(){
+  const faDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  const toFa = s => String(s).replace(/[0-9]/g, d => faDigits[d]);
+
+  const phaseLabelEl = document.getElementById('phaseLabel');
+  const timerEl = document.getElementById('timer');
+  const captionEl = document.getElementById('caption');
+  const hintEl = document.getElementById('hint');
+  const btn = document.getElementById('breathBtn');
+  const arcDam = document.getElementById('arcDam');
+  const arcNeg = document.getElementById('arcNeg');
+  const arcBaz = document.getElementById('arcBaz');
+  const tableWrap = document.getElementById('tableWrap');
+  const clearBtn = document.getElementById('clearBtn');
+
+  const STORAGE_KEY = 'yogaBreathHistory';
+
+  let phase = 0; // 0 idle, 1 دم, 2 نگه‌داشت, 3 بازدم
+  let phaseStart = null;
+  let current = { dam: null, negahdasht: null, bazdam: null };
+  let rafId = null;
+
+  const hints = [
+    'با لمس دگمه، دم را آغاز کن',
+    'برای پایان دم و آغاز نگه‌داشت، لمس کن',
+    'برای پایان نگه‌داشت و آغاز بازدم، لمس کن',
+    'برای پایان بازدم و ثبت تمرین، لمس کن'
+  ];
+  const captions = ['Start', 'Inhale', 'Hold', 'Exhale'];
+  const labels = ['برای شروع لمس کن', 'دم', 'نگه‌داشت', 'بازدم'];
+  const glowClasses = ['', 'glow-dam', 'glow-negahdasht', 'glow-bazdam'];
+  const labelClasses = ['', 'dam', 'negahdasht', 'bazdam'];
+
+  function formatTime(ms){
+    const totalSec = ms / 1000;
+    const m = Math.floor(totalSec / 60);
+    const s = (totalSec % 60).toFixed(1);
+    const sPadded = s.padStart(4, '0');
+    return toFa(`${String(m).padStart(2,'0')}:${sPadded}`);
+  }
+
+  function tick(){
+    if(phaseStart !== null){
+      timerEl.textContent = formatTime(performance.now() - phaseStart);
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+  rafId = requestAnimationFrame(tick);
+
+  function updateArcs(){
+    const arcs = [arcDam, arcNeg, arcBaz];
+    arcs.forEach((arc, i) => {
+      const stepIndex = i + 1; // 1,2,3
+      arc.classList.remove('arc-pending','arc-active','arc-done');
+      if(phase > stepIndex){
+        arc.classList.add('arc-done');
+      } else if(phase === stepIndex){
+        arc.classList.add('arc-active');
+      } else {
+        arc.classList.add('arc-pending');
+      }
+    });
+  }
+
+  function updateUI(){
+    phaseLabelEl.textContent = labels[phase];
+    phaseLabelEl.className = 'phase-label ' + labelClasses[phase];
+    captionEl.textContent = captions[phase];
+    hintEl.textContent = hints[phase];
+    btn.className = 'breath-btn' + (phase === 0 ? ' breathing' : '') + (glowClasses[phase] ? ' ' + glowClasses[phase] : '');
+    if(phase === 0){ timerEl.textContent = '۰۰:۰۰.۰'; }
+    updateArcs();
+  }
+
+  function loadHistory(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveHistory(list){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  function fmtSec(sec){
+    return toFa(sec.toFixed(1));
+  }
+
+  function fmtDate(iso){
+    try{
+      const d = new Date(iso);
+      return toFa(new Intl.DateTimeFormat('fa-IR-u-ca-persian', {dateStyle:'short', timeStyle:'short'}).format(d));
+    }catch(e){ return ''; }
+  }
+
+  function renderTable(){
+    const history = loadHistory();
+    if(history.length === 0){
+      tableWrap.innerHTML = '<div class="empty-state">هنوز تمرینی ثبت نشده.<br>اولین چرخه‌ی تنفس خود را آغاز کن.</div>';
+      return;
+    }
+    let rows = history.map((r, idx) => {
+      const total = r.dam + r.negahdasht + r.bazdam;
+      return `<tr>
+        <td>${toFa(idx+1)}</td>
+        <td class="date-c">${fmtDate(r.date)}</td>
+        <td class="dam-c">${fmtSec(r.dam)}</td>
+        <td class="neg-c">${fmtSec(r.negahdasht)}</td>
+        <td class="baz-c">${fmtSec(r.bazdam)}</td>
+        <td class="total-c">${fmtSec(total)}</td>
+      </tr>`;
+    }).join('');
+    tableWrap.innerHTML = `<table>
+      <thead><tr>
+        <th>#</th><th>تاریخ</th><th>دم</th><th>نگه‌داشت</th><th>بازدم</th><th>مجموع</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  function saveRecord(rec){
+    const history = loadHistory();
+    history.unshift({ date: new Date().toISOString(), dam: rec.dam, negahdasht: rec.negahdasht, bazdam: rec.bazdam });
+    saveHistory(history.slice(0, 10));
+    renderTable();
+  }
+
+  btn.addEventListener('click', () => {
+    const now = performance.now();
+    if(phase === 0){
+      phase = 1;
+      phaseStart = now;
+      current = { dam: null, negahdasht: null, bazdam: null };
+    } else if(phase === 1){
+      current.dam = (now - phaseStart) / 1000;
+      phase = 2;
+      phaseStart = now;
+    } else if(phase === 2){
+      current.negahdasht = (now - phaseStart) / 1000;
+      phase = 3;
+      phaseStart = now;
+    } else if(phase === 3){
+      current.bazdam = (now - phaseStart) / 1000;
+      saveRecord(current);
+      phase = 0;
+      phaseStart = null;
+    }
+    updateUI();
+  });
+
+  let clearArmed = false;
+  let clearTimeout = null;
+  clearBtn.addEventListener('click', () => {
+    if(!clearArmed){
+      clearArmed = true;
+      clearBtn.textContent = 'مطمئنی؟';
+      clearBtn.classList.add('confirming');
+      clearTimeout = setTimeout(() => {
+        clearArmed = false;
+        clearBtn.textContent = 'پاک کردن';
+        clearBtn.classList.remove('confirming');
+      }, 3000);
+    } else {
+      if(clearTimeout) window.clearTimeout(clearTimeout);
+      clearArmed = false;
+      clearBtn.textContent = 'پاک کردن';
+      clearBtn.classList.remove('confirming');
+      localStorage.removeItem(STORAGE_KEY);
+      renderTable();
+    }
+  });
+
+  updateUI();
+  renderTable();
+})();
+</script>
+
+
+</body>
+</html>
