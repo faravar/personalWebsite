@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>اسطرلاب مسیر | نقشه راه یادگیری</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#050912;
+    --navy:#0b1424;
+    --navy-mid:#122036;
+    --gold:#d4af37;
+    --gold-light:#f3d999;
+    --gold-dim:rgba(212,175,55,.35);
+    --gold-faint:rgba(212,175,55,.14);
+    --locked:#3d4a5c;
+    --locked-line:#2a3444;
+    --parchment:#efe6cf;
+    --parchment-dark:#e2d6b4;
+    --ink:#2b2118;
+    --text:#eef1f7;
+    --text-dim:#9aa7bd;
+  }
+  html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+   
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* ارتفاع فوتر خود را اینجا مشخص کنید */
+}
+
+
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: auto; /* اگر مایلید همیشه پایین صفحه بماند */
+    font-size: 0.9rem;
+    color: var(--text-dim, #a79fbb); /* استفاده از متغیر متنی که در کدها دارید */
+}
+
+.site-footer a {
+    color: var(--gold); /* یا هر رنگ شاخصی مثل گلد یا تال که در متغیرها تعریف کردید */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.site-footer a:hover {
+   color: var(--gold-light); /* تغییر رنگ هنگام هاور */
+    text-decoration: underline;
+    text-decoration: none;
+}
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:radial-gradient(ellipse at 50% -10%, #16233b 0%, var(--navy) 45%, var(--navy-deep) 100%);
+    font-family:'Vazirmatn',sans-serif;
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  #stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
+  .twinkle{animation:tw 4s ease-in-out infinite;}
+  @keyframes tw{0%,100%{opacity:.25;}50%{opacity:.95;}}
+
+  header{
+    position:relative;z-index:2;
+    text-align:center;
+    padding:38px 20px 18px;
+  }
+  .eyebrow{
+    font-size:12px;letter-spacing:.25em;color:var(--gold);
+    font-family:'Cinzel',serif;text-transform:uppercase;opacity:.85;
+  }
+  h1{
+    
+    font-weight:700;
+    font-size:clamp(26px,7vw,38px);
+    margin:8px 0 6px;
+    background:linear-gradient(180deg,var(--gold-light),var(--gold) 70%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    letter-spacing:.03em;
+  }
+  .subtitle{color:var(--text-dim);font-size:14px;max-width:420px;margin:0 auto;line-height:1.9;}
+
+  /* astrolabe gauge */
+  .gauge-wrap{display:flex;flex-direction:column;align-items:center;margin-top:22px;position:relative;z-index:2;}
+  .gauge{width:150px;height:150px;position:relative;}
+  .gauge svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .gauge-center{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  }
+  .gauge-num{font-family:'Cinzel',serif;font-size:26px;color:var(--gold-light);font-weight:700;}
+  .gauge-label{font-size:11px;color:var(--text-dim);margin-top:2px;}
+  .needle{transform-origin:75px 75px;transition:transform 1s cubic-bezier(.34,1.56,.64,1);}
+
+  main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:30px 14px 60px;}
+  #tree-svg{width:100%;height:auto;display:block;overflow:visible;}
+
+  .edge{fill:none;stroke:var(--locked-line);stroke-width:2;stroke-dasharray:5 6;transition:stroke .6s, opacity .6s;}
+  .edge.active{stroke:var(--gold);stroke-dasharray:0;opacity:.85;filter:drop-shadow(0 0 4px var(--gold-dim));}
+
+  .node-group{cursor:pointer;}
+  .node-group.locked{cursor:not-allowed;}
+  .ring-outer{fill:none;stroke-width:1.4;}
+  .ring-ticks line{stroke-width:1;}
+  .node-core{transition:fill .4s, stroke .4s;}
+  .node-label{
+    font-family:'Vazirmatn',sans-serif;font-size:11.5px;font-weight:600;
+    fill:var(--text);text-anchor:middle;pointer-events:none;
+  }
+  .node-label.locked-label{fill:var(--text-dim);}
+  .tier-tag{font-size:9px;fill:var(--gold);opacity:.7;text-anchor:middle;letter-spacing:.1em;}
+
+  .locked .ring-outer{stroke:var(--locked);}
+  .locked .ring-ticks line{stroke:var(--locked);}
+  .locked .node-core{fill:var(--navy-mid);stroke:var(--locked);stroke-width:1.5;}
+  .locked .lock-icon{stroke:var(--text-dim);}
+
+  .available .ring-outer{stroke:var(--gold);}
+  .available .ring-ticks line{stroke:var(--gold);}
+  .available .node-core{fill:var(--navy-mid);stroke:var(--gold);stroke-width:2;}
+  .available .pulse{animation:pulse 2.6s ease-in-out infinite;}
+  @keyframes pulse{
+    0%{r:24;opacity:.55;}
+    70%{r:34;opacity:0;}
+    100%{r:34;opacity:0;}
+  }
+
+  .done .ring-outer{stroke:var(--gold-light);}
+  .done .ring-ticks line{stroke:var(--gold-light);}
+  .done .node-core{fill:url(#goldGrad);stroke:var(--gold-light);stroke-width:2;}
+  .done .star-mark{fill:var(--navy-deep);}
+
+  .final .node-core{r:30;}
+
+  .burst circle{fill:var(--gold-light);opacity:0;}
+  .burst.play circle{animation:burst .9s ease-out forwards;}
+  @keyframes burst{
+    0%{opacity:1;transform:translate(0,0) scale(1);}
+    100%{opacity:0;transform:translate(var(--bx),var(--by)) scale(.2);}
+  }
+
+  /* bottom sheet */
+  .overlay{
+    position:fixed;inset:0;background:rgba(2,5,12,.6);backdrop-filter:blur(2px);
+    z-index:10;opacity:0;pointer-events:none;transition:opacity .3s;
+  }
+  .overlay.show{opacity:1;pointer-events:auto;}
+  .sheet{
+    position:fixed;left:0;right:0;bottom:0;z-index:11;
+    background:
+      linear-gradient(var(--parchment),var(--parchment-dark));
+    color:var(--ink);
+    border-radius:22px 22px 0 0;
+    padding:22px 22px 26px;
+    transform:translateY(105%);
+    transition:transform .38s cubic-bezier(.32,.72,0,1);
+    max-height:78vh;overflow-y:auto;
+    box-shadow:0 -10px 40px rgba(0,0,0,.5);
+    max-width:460px;margin:0 auto;
+  }
+  .sheet.show{transform:translateY(0);}
+  .sheet::before{
+    content:'';display:block;width:42px;height:4px;background:var(--ink);opacity:.25;
+    border-radius:3px;margin:0 auto 16px;
+  }
+  .sheet-tier{font-size:11px;color:#8a6f2f;font-weight:700;letter-spacing:.12em;}
+  .sheet-title{font-family:'Cinzel',serif;font-size:20px;font-weight:700;margin:6px 0 10px;}
+  .sheet-desc{font-size:14px;line-height:2;color:#4a3f2f;}
+  .sheet-req{
+    margin-top:12px;font-size:13px;background:rgba(43,33,24,.08);
+    border-radius:10px;padding:10px 12px;color:#6b5a3a;
+  }
+  .sheet-actions{margin-top:18px;display:flex;gap:10px;}
+  .btn-complete{
+    flex:1;font-family:'Vazirmatn',sans-serif;font-weight:700;font-size:14px;
+    padding:13px;border-radius:12px;border:none;cursor:pointer;
+    background:var(--ink);color:var(--parchment);transition:.2s;
+  }
+  .btn-complete.done-state{background:#7a6a3f;}
+  .btn-close{
+    font-family:'Vazirmatn',sans-serif;font-size:14px;padding:13px 18px;border-radius:12px;
+    border:1px solid rgba(43,33,24,.3);background:transparent;color:var(--ink);cursor:pointer;
+  }
+
+  /* settings modal */
+  .modal{
+    position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
+    background:rgba(2,5,12,.75);opacity:0;pointer-events:none;transition:opacity .25s;padding:20px;
+  }
+  .modal.show{opacity:1;pointer-events:auto;}
+  .modal-box{
+    background:var(--navy-mid);border:1px solid var(--gold-dim);border-radius:16px;
+    max-width:460px;width:100%;padding:20px;max-height:80vh;overflow:auto;
+  }
+  .modal-box h3{font-family:'Cinzel',serif;color:var(--gold-light);margin:0 0 10px;font-size:17px;}
+  .modal-box p{font-size:12.5px;color:var(--text-dim);line-height:1.9;margin-bottom:10px;}
+  .modal-box textarea{
+    width:100%;height:220px;background:var(--navy-deep);color:var(--text);
+    border:1px solid var(--locked-line);border-radius:10px;padding:10px;font-family:monospace;
+    font-size:11px;direction:ltr;text-align:left;
+  }
+  .modal-box input[type="text"]{
+    width:100%;background:var(--navy-deep);color:var(--text);
+    border:1px solid var(--locked-line);border-radius:10px;padding:13px 14px;
+    font-family:'Vazirmatn',sans-serif;font-size:14px;direction:rtl;text-align:right;
+  }
+  .modal-box input[type="text"]:focus{outline:none;border-color:var(--gold-dim);}
+  .modal-actions{display:flex;gap:10px;margin-top:12px;}
+  .modal-actions button{flex:1;padding:11px;border-radius:10px;font-family:'Vazirmatn',sans-serif;font-weight:600;font-size:13px;border:none;cursor:pointer;}
+  .apply-btn{background:var(--gold);color:var(--navy-deep);}
+  .cancel-btn{background:transparent;border:1px solid var(--locked-line)!important;color:var(--text-dim);}
+  .modal-box details{margin-top:16px;border-top:1px solid var(--locked-line);padding-top:12px;}
+  .modal-box summary{cursor:pointer;color:var(--text-dim);font-size:12px;list-style:none;}
+  .modal-box summary::-webkit-details-marker{display:none;}
+  .modal-box details textarea{margin-top:10px;}
+  .reset-link{
+    display:block;text-align:center;margin-top:16px;color:var(--text-dim);
+    font-size:12px;text-decoration:underline;cursor:pointer;
+  }
+  .settings-fab{
+    position:fixed;top:18px;left:16px;z-index:6;
+    width:38px;height:38px;border-radius:50%;
+    background:var(--navy-mid);border:1px solid var(--gold-dim);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .toast{
+    position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-60px);
+    background:var(--gold);color:var(--navy-deep);font-weight:700;font-size:13px;
+    padding:10px 18px;border-radius:999px;z-index:30;transition:transform .35s;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="settings-fab" onclick="openSettings()" title="ویرایش نقشه">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.8">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09A1.65 1.65 0 0015.4 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+  </svg>
+</div>
+
+<header>
+  <div class="eyebrow">Interactive Roadmap</div>
+  <h1 id="treeTitle">اسطرلاب مسیر</h1>
+  <p class="subtitle" id="treeSubtitle">هر ستاره یک مهارت است. مسیر را طی کن، ستاره‌ها را فتح کن و اسطرلابِ دانش را کامل کن.</p>
+
+  <div class="gauge-wrap">
+    <div class="gauge">
+      <svg viewBox="0 0 150 150">
+        <defs>
+          <linearGradient id="needleGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#f3d999"/>
+            <stop offset="100%" stop-color="#d4af37"/>
+          </linearGradient>
+        </defs>
+        <circle cx="75" cy="75" r="66" fill="none" stroke="#1a2740" stroke-width="10"/>
+        <circle id="progressRing" cx="75" cy="75" r="66" fill="none" stroke="url(#needleGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="415" stroke-dashoffset="415"/>
+        <g id="ticksGauge"></g>
+      </svg>
+      <div class="gauge-center">
+        <div class="gauge-num" id="gaugeNum">0%</div>
+        <div class="gauge-label" id="gaugeLabel">۰ از ۰ ستاره</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <svg id="tree-svg" viewBox="0 0 340 1180">
+    <defs>
+      <radialGradient id="goldGrad" cx="35%" cy="30%" r="75%">
+        <stop offset="0%" stop-color="#fdeeb8"/>
+        <stop offset="60%" stop-color="#e6bf52"/>
+        <stop offset="100%" stop-color="#b8912f"/>
+      </radialGradient>
+    </defs>
+    <g id="edgesLayer"></g>
+    <g id="nodesLayer"></g>
+  </svg>
+</main>
+
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-tier" id="sheetTier">مرحله</div>
+  <div class="sheet-title" id="sheetTitle">—</div>
+  <div class="sheet-desc" id="sheetDesc">—</div>
+  <div class="sheet-req" id="sheetReq" style="display:none;"></div>
+  <div class="sheet-actions">
+    <button class="btn-complete" id="completeBtn" onclick="toggleComplete()">علامت‌گذاری به‌عنوان تکمیل‌شده</button>
+    <button class="btn-close" onclick="closeSheet()">بستن</button>
+  </div>
+</div>
+
+<div class="modal" id="settingsModal">
+  <div class="modal-box">
+    <h3>ساخت نقشه راه جدید</h3>
+    <p>
+      عنوان چیزی که می‌خوای یاد بگیری رو بنویس. اگه توی مسیرهای آماده باشه، نسخه‌ی کامل و بی‌نقصش رو نشون می‌دیم؛
+      اگه نباشه، همین حالا یک نقشه راه حرفه‌ای مخصوص همون موضوع برات می‌سازیم.
+    </p>
+    <input type="text" id="topicInput" placeholder="مثلاً: فارکس، یادگیری پایتون، زبان انگلیسی...">
+    <div class="modal-actions">
+      <button class="apply-btn" onclick="generateRoadmap()">ساخت نقشه راه</button>
+      <button class="cancel-btn" onclick="closeSettings()">انصراف</button>
+    </div>
+
+    <details>
+      <summary>ویرایش دستی پیشرفته (JSON) — برای توسعه‌دهنده‌ها</summary>
+      <textarea id="jsonInput"></textarea>
+      <div class="modal-actions">
+        <button class="apply-btn" onclick="applyCustomTree()">اعمال JSON</button>
+      </div>
+    </details>
+
+    <a class="reset-link" onclick="resetProgress()">پاک‌کردن پیشرفتِ این نقشه</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ داده پیش‌فرض: مسیر یادگیری Smart Money (فارکس) ============ */
+const DEFAULT_TREE = {
+  title: "اسطرلاب مسیر",
+  subtitle: "مسیر یادگیری Smart Money — هر ستاره یک مهارت است. آن را طی کن و فتح کن.",
+  nodes: [
+    {id:"n1", title:"مبانی چارت‌خوانی", tier:"پایه", x:170, y:70,
+     desc:"آشنایی با کندل‌ها، تایم‌فریم‌ها، روند صعودی/نزولی/خنثی و اصول اولیه‌ی خواندن نمودار قیمت.", req:[]},
+    {id:"n2", title:"ساختار بازار (Market Structure)", tier:"پایه", x:170,y:190,
+     desc:"شناخت Swing High/Low، روند از دید ساختار، و نحوه‌ی نقشه‌برداری اولیه روی چارت.", req:["n1"]},
+    {id:"n3", title:"BOS / CHOCH", tier:"میانی", x:95,y:320,
+     desc:"تشخیص شکست ساختار (Break of Structure) و تغییر کاراکتر بازار (Change of Character).", req:["n2"]},
+    {id:"n4", title:"Order Blocks", tier:"میانی", x:170,y:420,
+     desc:"شناسایی بلوک‌های سفارش نهادی و نحوه‌ی واکنش قیمت به آن‌ها.", req:["n2"]},
+    {id:"n5", title:"Fair Value Gap", tier:"میانی", x:245,y:320,
+     desc:"شکاف ارزش منصفانه (FVG)، نحوه‌ی تشکیل و پر شدن آن در حرکات قیمتی.", req:["n2"]},
+    {id:"n6", title:"لیکوییدیتی (Liquidity)", tier:"پیشرفته", x:95,y:540,
+     desc:"مفهوم استخر نقدینگی، شکار لیکوییدیتی و نقش آن در حرکات فریبنده‌ی بازار.", req:["n3","n4"]},
+    {id:"n7", title:"مدل AMD", tier:"پیشرفته", x:170,y:640,
+     desc:"مدل Accumulation–Manipulation–Distribution و کاربرد آن در تحلیل روزانه.", req:["n4"]},
+    {id:"n8", title:"نقشه هفتگی/روزانه", tier:"پیشرفته", x:245,y:540,
+     desc:"ترسیم سطوح High/Low/Close/Middle هفته و روز قبل برای تحلیل نقاط کلیدی.", req:["n4","n5"]},
+    {id:"n9", title:"Kill Zones و زمان‌بندی", tier:"تخصصی", x:95,y:760,
+     desc:"شناخت بازه‌های زمانی پرنوسان جلسات لندن/نیویورک و اهمیت زمان در ورود معامله.", req:["n6","n7"]},
+    {id:"n10", title:"مدیریت ریسک", tier:"تخصصی", x:170,y:860,
+     desc:"تعیین حجم معامله، نسبت ریسک به ریوارد و قوانین حفظ سرمایه.", req:["n7"]},
+    {id:"n11", title:"روان‌شناسی معامله‌گری", tier:"تخصصی", x:245,y:760,
+     desc:"مدیریت هیجانات، انضباط اجرایی و ساخت ذهنیت یک معامله‌گر حرفه‌ای.", req:["n7","n8"]},
+    {id:"n12", title:"بک‌تست سیستماتیک", tier:"استادی", x:130,y:980,
+     desc:"آزمایش استراتژی روی داده‌های تاریخی و استخراج آمار عملکرد.", req:["n9","n10"]},
+    {id:"n13", title:"ژورنال معاملاتی", tier:"استادی", x:210,y:980,
+     desc:"ثبت منظم معاملات، تحلیل اشتباهات و بهبود مستمر روش معامله‌گری.", req:["n10","n11"]},
+    {id:"n14", title:"معامله زنده", tier:"اوج مسیر", x:170,y:1100,
+     desc:"اجرای استراتژی به‌صورت زنده روی حساب واقعی یا دمو با رعایت تمام اصول آموخته‌شده.", req:["n12","n13"], final:true}
+  ]
+};
+
+/* ============ چیدمانِ مشترکِ ۱۴ ستاره (مختصات/طبقه/پیش‌نیاز ثابت برای هر موضوعی) ============ */
+const TEMPLATE_LAYOUT = [
+  {id:"n1",  x:170,y:70,  tier:"پایه",      req:[]},
+  {id:"n2",  x:170,y:190, tier:"پایه",      req:["n1"]},
+  {id:"n3",  x:95, y:320, tier:"میانی",     req:["n2"]},
+  {id:"n4",  x:170,y:420, tier:"میانی",     req:["n2"]},
+  {id:"n5",  x:245,y:320, tier:"میانی",     req:["n2"]},
+  {id:"n6",  x:95, y:540, tier:"پیشرفته",   req:["n3","n4"]},
+  {id:"n7",  x:170,y:640, tier:"پیشرفته",   req:["n4"]},
+  {id:"n8",  x:245,y:540, tier:"پیشرفته",   req:["n4","n5"]},
+  {id:"n9",  x:95, y:760, tier:"تخصصی",     req:["n6","n7"]},
+  {id:"n10", x:170,y:860, tier:"تخصصی",     req:["n7"]},
+  {id:"n11", x:245,y:760, tier:"تخصصی",     req:["n7","n8"]},
+  {id:"n12", x:130,y:980, tier:"استادی",    req:["n9","n10"]},
+  {id:"n13", x:210,y:980, tier:"استادی",    req:["n10","n11"]},
+  {id:"n14", x:170,y:1100,tier:"اوج مسیر",  req:["n12","n13"], final:true}
+];
+
+function buildTreeFromData(title, subtitle, list){
+  return {
+    title, subtitle,
+    nodes: TEMPLATE_LAYOUT.map((slot,i)=> Object.assign({}, slot, {
+      title:list[i].title, desc:list[i].desc
+    }))
+  };
+}
+
+/* ============ کتابخانهٔ نقشه‌راه‌های آماده (پایگاه‌داده‌ی داخلی) ============ */
+const SUBJECT_DB = [
+  {
+    keywords:["فارکس","ترید","معامله","اسمارت مانی","smart money","xauusd","us30","فارکس/کریپتو","forex"],
+    subtitle:"مسیر یادگیری Smart Money — هر ستاره یک مهارت است. آن را طی کن و فتح کن.",
+    data:[
+      {title:"مبانی چارت‌خوانی", desc:"آشنایی با کندل‌ها، تایم‌فریم‌ها، روند صعودی/نزولی/خنثی و اصول اولیه‌ی خواندن نمودار قیمت."},
+      {title:"ساختار بازار (Market Structure)", desc:"شناخت Swing High/Low، روند از دید ساختار، و نحوه‌ی نقشه‌برداری اولیه روی چارت."},
+      {title:"BOS / CHOCH", desc:"تشخیص شکست ساختار (Break of Structure) و تغییر کاراکتر بازار (Change of Character)."},
+      {title:"Order Blocks", desc:"شناسایی بلوک‌های سفارش نهادی و نحوه‌ی واکنش قیمت به آن‌ها."},
+      {title:"Fair Value Gap", desc:"شکاف ارزش منصفانه (FVG)، نحوه‌ی تشکیل و پر شدن آن در حرکات قیمتی."},
+      {title:"لیکوییدیتی (Liquidity)", desc:"مفهوم استخر نقدینگی، شکار لیکوییدیتی و نقش آن در حرکات فریبنده‌ی بازار."},
+      {title:"مدل AMD", desc:"مدل Accumulation–Manipulation–Distribution و کاربرد آن در تحلیل روزانه."},
+      {title:"نقشه هفتگی/روزانه", desc:"ترسیم سطوح High/Low/Close/Middle هفته و روز قبل برای تحلیل نقاط کلیدی."},
+      {title:"Kill Zones و زمان‌بندی", desc:"شناخت بازه‌های زمانی پرنوسان جلسات لندن/نیویورک و اهمیت زمان در ورود معامله."},
+      {title:"مدیریت ریسک", desc:"تعیین حجم معامله، نسبت ریسک به ریوارد و قوانین حفظ سرمایه."},
+      {title:"روان‌شناسی معامله‌گری", desc:"مدیریت هیجانات، انضباط اجرایی و ساخت ذهنیت یک معامله‌گر حرفه‌ای."},
+      {title:"بک‌تست سیستماتیک", desc:"آزمایش استراتژی روی داده‌های تاریخی و استخراج آمار عملکرد."},
+      {title:"ژورنال معاملاتی", desc:"ثبت منظم معاملات، تحلیل اشتباهات و بهبود مستمر روش معامله‌گری."},
+      {title:"معامله زنده", desc:"اجرای استراتژی به‌صورت زنده روی حساب واقعی یا دمو با رعایت تمام اصول آموخته‌شده."}
+    ]
+  },
+  {
+    keywords:["وب","فرانت‌اند","فرانت اند","frontend","react","جاوااسکریپت","javascript","html","برنامه‌نویسی وب","برنامه نویسی وب"],
+    subtitle:"مسیر یادگیری توسعه وب — از HTML تا استقرار یک پروژه واقعی.",
+    data:[
+      {title:"مبانی HTML و CSS", desc:"ساختار صفحات وب با HTML و استایل‌دهی پایه با CSS."},
+      {title:"جاوااسکریپت پایه", desc:"متغیرها، توابع، حلقه‌ها و منطق پایه‌ی برنامه‌نویسی."},
+      {title:"DOM و رویدادها", desc:"دستکاری عناصر صفحه و واکنش به تعامل کاربر."},
+      {title:"Git و کنترل نسخه", desc:"مدیریت نسخه‌ی کد و همکاری تیمی با Git و GitHub."},
+      {title:"طراحی واکنش‌گرا", desc:"طراحی Responsive برای نمایش درست در موبایل، تبلت و دسکتاپ."},
+      {title:"React مقدماتی", desc:"کامپوننت‌ها، Props و State در کتابخانه‌ی React."},
+      {title:"مدیریت وضعیت پیشرفته", desc:"Hooks، Context و الگوهای مدیریت state در برنامه‌های بزرگ‌تر."},
+      {title:"ارتباط با API", desc:"دریافت و ارسال داده با Fetch/Axios و کار با سرور."},
+      {title:"ابزارهای Build", desc:"Vite/Webpack، باندل‌سازی و بهینه‌سازی پروژه."},
+      {title:"تست‌نویسی", desc:"نوشتن تست واحد و یکپارچگی برای کد قابل‌اعتماد."},
+      {title:"عملکرد و بهینه‌سازی", desc:"بهبود سرعت بارگذاری و کیفیت رندر صفحات."},
+      {title:"دیپلوی و CI/CD", desc:"استقرار پروژه و اتوماسیون فرآیند انتشار."},
+      {title:"پروژه واقعی", desc:"ساخت یک اپلیکیشن کامل از صفر تا استقرار."},
+      {title:"آماده‌سازی برای بازار کار", desc:"پورتفولیو، رزومه فنی و آمادگی برای مصاحبه‌های استخدامی."}
+    ]
+  },
+  {
+    keywords:["پایتون","python"],
+    subtitle:"مسیر یادگیری پایتون — از صفر تا ساخت پروژه واقعی.",
+    data:[
+      {title:"نصب و محیط پایتون", desc:"راه‌اندازی محیط توسعه و اجرای اولین برنامه."},
+      {title:"متغیرها و انواع داده", desc:"آشنایی با رشته‌ها، اعداد، لیست‌ها و دیکشنری‌ها."},
+      {title:"حلقه‌ها و شرط‌ها", desc:"کنترل جریان برنامه با if/else و حلقه‌های for/while."},
+      {title:"توابع و ماژول‌ها", desc:"سازمان‌دهی کد در توابع قابل‌استفاده‌ی مجدد و ماژول‌ها."},
+      {title:"کار با فایل و خطاها", desc:"خواندن/نوشتن فایل و مدیریت استثناها با try/except."},
+      {title:"برنامه‌نویسی شی‌گرا", desc:"کلاس‌ها، اشیاء و اصول OOP در پایتون."},
+      {title:"کتابخانه‌های داده", desc:"تحلیل داده با NumPy و Pandas."},
+      {title:"کار با API وب", desc:"ارسال درخواست و کار با داده‌های JSON از سرویس‌های وب."},
+      {title:"پایگاه داده و SQL", desc:"ذخیره و بازیابی داده با پایگاه‌داده‌های رابطه‌ای."},
+      {title:"تست‌نویسی و دیباگ", desc:"نوشتن تست و رفع اشکال حرفه‌ای کد."},
+      {title:"اتوماسیون و اسکریپت‌نویسی", desc:"خودکارسازی وظایف تکراری با اسکریپت‌های پایتون."},
+      {title:"فریم‌ورک وب", desc:"ساخت اپلیکیشن وب با Flask یا Django."},
+      {title:"ساخت پروژه واقعی", desc:"طراحی و پیاده‌سازی یک پروژه کامل از ابتدا."},
+      {title:"آماده‌سازی برای استخدام", desc:"رزومه فنی، پورتفولیو و آمادگی برای فریلنسری یا استخدام."}
+    ]
+  },
+  {
+    keywords:["انگلیسی","english","زبان انگلیسی"],
+    subtitle:"مسیر یادگیری زبان انگلیسی — از پایه تا مکالمه‌ی روان.",
+    data:[
+      {title:"الفبا و تلفظ پایه", desc:"آشنایی با صداها، تلفظ صحیح حروف و کلمات ابتدایی."},
+      {title:"دایره لغات روزمره", desc:"یادگیری واژگان پرکاربرد برای موقعیت‌های روزمره."},
+      {title:"گرامر پایه (زمان‌ها)", desc:"ساختار جملات و زمان‌های اصلی فعل در انگلیسی."},
+      {title:"مکالمه ساده", desc:"تمرین جملات کوتاه برای معرفی خود و گفتگوی ابتدایی."},
+      {title:"شنیداری مقدماتی", desc:"گوش‌دادن به دیالوگ‌های ساده و تقویت درک شنیداری."},
+      {title:"گرامر میانی", desc:"جملات مرکب، شرطی‌ها و ساختارهای پیچیده‌تر."},
+      {title:"نوشتار ساختاریافته", desc:"نوشتن پاراگراف و ایمیل با ساختار درست."},
+      {title:"مکالمه روان روزمره", desc:"گفتگوی طبیعی درباره‌ی موضوعات متنوع روزمره."},
+      {title:"لغات تخصصی/آکادمیک", desc:"واژگان مورد نیاز برای کار، تحصیل یا حوزه‌ی تخصصی."},
+      {title:"شنیداری پیشرفته", desc:"درک پادکست، فیلم و گفتگوی سریع بومی‌زبان‌ها."},
+      {title:"مصاحبه و ارائه", desc:"مهارت صحبت رسمی، ارائه و مصاحبه به زبان انگلیسی."},
+      {title:"آزمون‌های بین‌المللی", desc:"آمادگی برای آزمون‌هایی مانند IELTS یا TOEFL."},
+      {title:"نوشتار حرفه‌ای", desc:"نگارش رسمی، مقاله و مکاتبات کاری."},
+      {title:"تسلط و مکالمه بومی‌گونه", desc:"صحبت روان، طبیعی و نزدیک به یک بومی‌زبان."}
+    ]
+  }
+];
+
+function normalizeFa(s){
+  return (s||"").trim().toLowerCase().replace(/[‌\s]+/g," ");
+}
+
+function matchSubject(topic){
+  const norm = normalizeFa(topic);
+  return SUBJECT_DB.find(s => s.keywords.some(k => norm.includes(normalizeFa(k))));
+}
+
+/* اگر موضوع در پایگاه‌داده نبود، یک نقشه راه استاندارد و حرفه‌ای برایش می‌سازیم */
+function generateGenericData(topic){
+  const t = topic;
+  const steps = [
+    ["آشنایی با «"+t+"»", "شناخت کلی حوزه، اصطلاحات پایه و نقشهٔ کلی مسیر یادگیری «"+t+"»."],
+    ["مفاهیم بنیادی "+t, "یادگیری مفاهیم و اصول اولیه‌ای که پایه‌ی هر گام بعدی هستند."],
+    ["ابزارها و منابع "+t, "شناخت ابزار، نرم‌افزار یا منابع استانداردی که در این حوزه استفاده می‌شود."],
+    ["تمرین مقدماتی "+t, "انجام اولین تمرین‌های عملی برای جا افتادن مفاهیم پایه."],
+    ["اصول میانی "+t, "ورود به مفاهیم سطح متوسط و ترکیب دانسته‌های پایه با هم."],
+    ["اولین پروژه کوچک", "ساخت یک نمونه‌کار کوچک برای محک‌زدن مهارت‌های تا این مرحله."],
+    ["تکنیک‌های پیشرفته "+t, "یادگیری روش‌ها و تکنیک‌های سطح بالاتر برای کار حرفه‌ای‌تر."],
+    ["حل چالش‌های واقعی", "رویارویی با مسائل واقعی و پیدا کردن راه‌حل مستقل."],
+    ["بهینه‌سازی روش کار", "بازبینی و بهبود روش‌ها برای رسیدن به نتیجه‌ی بهتر و سریع‌تر."],
+    ["مطالعه‌ی موردی حرفه‌ای‌ها", "بررسی نمونه‌کار و روش کار افراد باتجربه در «"+t+"»."],
+    ["مدیریت زمان و تمرین منظم", "ساخت یک روال منظم تمرین و پیگیری پیشرفت شخصی."],
+    ["ساخت یک پروژه کامل", "طراحی و تکمیل یک پروژه‌ی واقعی از ابتدا تا انتها."],
+    ["مستندسازی و اشتراک‌گذاری", "ثبت تجربه، مستندسازی کار و اشتراک‌گذاری با دیگران."],
+    ["تسلط حرفه‌ای بر "+t, "رسیدن به سطحی از مهارت که بتوانی حرفه‌ای کار کنی یا تدریس دهی."]
+  ];
+  return steps.map(([title,desc])=>({title,desc}));
+}
+
+function generateRoadmap(){
+  const input = document.getElementById("topicInput").value.trim();
+  if(!input){
+    showToast("اول یه عنوان بنویس");
+    return;
+  }
+  const match = matchSubject(input);
+  let newTree;
+  if(match){
+    newTree = buildTreeFromData(input, match.subtitle, match.data);
+    showToast("نقشه راه آماده پیدا شد ✦");
+  } else {
+    newTree = buildTreeFromData(input, "مسیر یادگیری "+input+" — هر ستاره یک مهارت است.", generateGenericData(input));
+    showToast("نقشه راه اختصاصی ساخته شد ✦");
+  }
+  tree = newTree;
+  localStorage.setItem(STORAGE_TREE, JSON.stringify(tree));
+  completed = new Set();
+  saveProgress();
+  render();
+  closeSettings();
+}
+
+const STORAGE_PROGRESS = "roadmap_progress_v1";
+const STORAGE_TREE = "roadmap_tree_v1";
+let tree = null;
+let completed = new Set();
+let activeNodeId = null;
+
+function loadTree(){
+  const saved = localStorage.getItem(STORAGE_TREE);
+  tree = saved ? JSON.parse(saved) : DEFAULT_TREE;
+}
+function loadProgress(){
+  const saved = localStorage.getItem(STORAGE_PROGRESS);
+  completed = new Set(saved ? JSON.parse(saved) : []);
+}
+function saveProgress(){
+  localStorage.setItem(STORAGE_PROGRESS, JSON.stringify([...completed]));
+}
+
+function isUnlocked(node){
+  if(completed.has(node.id)) return true;
+  return node.req.every(r => completed.has(r));
+}
+
+function nodeState(node){
+  if(completed.has(node.id)) return "done";
+  if(isUnlocked(node)) return "available";
+  return "locked";
+}
+
+const svgNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs){
+  const e = document.createElementNS(svgNS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+function render(){
+  document.getElementById("treeTitle").textContent = tree.title || "اسطرلاب مسیر";
+  document.getElementById("treeSubtitle").textContent = tree.subtitle || "";
+
+  const svg = document.getElementById("tree-svg");
+  const edgesLayer = document.getElementById("edgesLayer");
+  const nodesLayer = document.getElementById("nodesLayer");
+  edgesLayer.innerHTML = "";
+  nodesLayer.innerHTML = "";
+
+  // فیت کردن viewBox بر اساس بیشترین y
+  const maxY = Math.max(...tree.nodes.map(n=>n.y)) + 90;
+  svg.setAttribute("viewBox", `0 0 340 ${maxY}`);
+
+  const byId = {};
+  tree.nodes.forEach(n=> byId[n.id]=n);
+
+  // یال‌ها
+  tree.nodes.forEach(n=>{
+    n.req.forEach(rid=>{
+      const p = byId[rid];
+      if(!p) return;
+      const midY = (p.y+n.y)/2;
+      const d = `M ${p.x} ${p.y} C ${p.x} ${midY}, ${n.x} ${midY}, ${n.x} ${n.y}`;
+      const path = el("path", {d, class:"edge"+(completed.has(rid) && (completed.has(n.id)||isUnlocked(n)) ? " active":"")});
+      edgesLayer.appendChild(path);
+    });
+  });
+
+  // گره‌ها
+  tree.nodes.forEach(n=>{
+    const state = nodeState(n);
+    const g = el("g", {class:`node-group ${state}${n.final?" final":""}`, "data-id": n.id});
+    g.addEventListener("click", ()=> onNodeClick(n));
+
+    const R = n.final ? 30 : 24;
+
+    if(state==="available"){
+      const pulse = el("circle", {cx:n.x, cy:n.y, r:R, class:"pulse"});
+      g.appendChild(pulse);
+    }
+
+    // تیک‌های اسطرلاب دور گره
+    const ticks = el("g", {class:"ring-ticks"});
+    for(let a=0;a<360;a+=30){
+      const rad = a*Math.PI/180;
+      const r1 = R+3, r2 = R+7;
+      const x1 = n.x + r1*Math.cos(rad), y1 = n.y + r1*Math.sin(rad);
+      const x2 = n.x + r2*Math.cos(rad), y2 = n.y + r2*Math.sin(rad);
+      ticks.appendChild(el("line",{x1,y1,x2,y2}));
+    }
+    g.appendChild(ticks);
+
+    g.appendChild(el("circle", {cx:n.x, cy:n.y, r:R+7, class:"ring-outer"}));
+    g.appendChild(el("circle", {cx:n.x, cy:n.y, r:R, class:"node-core"}));
+
+    if(state==="done"){
+      const star = el("path", {
+        d: starPath(n.x, n.y, R*0.5, R*0.22, 5),
+        class:"star-mark"
+      });
+      g.appendChild(star);
+    } else if(state==="locked"){
+      g.appendChild(el("path",{
+        d:`M ${n.x-6} ${n.y-2} h12 v10 h-12 z M ${n.x-4} ${n.y-2} v-4 a4 4 0 0 1 8 0 v4`,
+        class:"lock-icon", fill:"none", "stroke-width":"1.6"
+      }));
+    } else {
+      g.appendChild(el("circle",{cx:n.x, cy:n.y, r:3.5, fill:"var(--gold-light)"}));
+    }
+
+    const label = el("text", {
+      x:n.x, y:n.y+R+22, class:"node-label"+(state==="locked"?" locked-label":"")
+    });
+    label.textContent = n.title;
+    g.appendChild(label);
+
+    nodesLayer.appendChild(g);
+  });
+
+  updateGauge();
+}
+
+function starPath(cx,cy,rOuter,rInner,points){
+  let d="";
+  for(let i=0;i<points*2;i++){
+    const r = i%2===0? rOuter: rInner;
+    const a = (Math.PI/points)*i - Math.PI/2;
+    const x = cx + r*Math.cos(a), y = cy + r*Math.sin(a);
+    d += (i===0? "M":"L") + x + " " + y + " ";
+  }
+  return d + "Z";
+}
+
+function updateGauge(){
+  const total = tree.nodes.length;
+  const done = tree.nodes.filter(n=>completed.has(n.id)).length;
+  const pct = total? done/total : 0;
+  const circumference = 2*Math.PI*66;
+  const ring = document.getElementById("progressRing");
+  ring.setAttribute("stroke-dasharray", circumference);
+  ring.setAttribute("stroke-dashoffset", circumference*(1-pct));
+  document.getElementById("gaugeNum").textContent = Math.round(pct*100)+"%";
+  document.getElementById("gaugeLabel").textContent = toFa(done)+" از "+toFa(total)+" ستاره";
+}
+
+function toFa(num){
+  const fa = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  return String(num).split("").map(d=> fa[d] ?? d).join("");
+}
+
+function onNodeClick(n){
+  const state = nodeState(n);
+  if(state==="locked"){
+    showToast("ابتدا مراحل پیش‌نیاز را کامل کن");
+    return;
+  }
+  activeNodeId = n.id;
+  document.getElementById("sheetTier").textContent = n.tier || "مرحله";
+  document.getElementById("sheetTitle").textContent = n.title;
+  document.getElementById("sheetDesc").textContent = n.desc || "";
+  const reqBox = document.getElementById("sheetReq");
+  if(n.req && n.req.length){
+    const names = n.req.map(rid=>{
+      const p = tree.nodes.find(x=>x.id===rid);
+      return p? p.title : rid;
+    });
+    reqBox.style.display = "block";
+    reqBox.textContent = "پیش‌نیاز: "+names.join("، ");
+  } else {
+    reqBox.style.display = "none";
+  }
+  const btn = document.getElementById("completeBtn");
+  const isDone = completed.has(n.id);
+  btn.textContent = isDone ? "لغو تکمیل‌شدن" : "علامت‌گذاری به‌عنوان تکمیل‌شده";
+  btn.classList.toggle("done-state", isDone);
+
+  document.getElementById("overlay").classList.add("show");
+  document.getElementById("sheet").classList.add("show");
+}
+
+function closeSheet(){
+  document.getElementById("overlay").classList.remove("show");
+  document.getElementById("sheet").classList.remove("show");
+}
+
+function toggleComplete(){
+  if(!activeNodeId) return;
+  if(completed.has(activeNodeId)){
+    completed.delete(activeNodeId);
+  } else {
+    completed.add(activeNodeId);
+    showToast("ستاره فتح شد ✦");
+  }
+  saveProgress();
+  render();
+  closeSheet();
+}
+
+function resetProgress(){
+  if(!confirm("مطمئنی می‌خوای پیشرفتت رو از اول شروع کنی؟")) return;
+  completed = new Set();
+  saveProgress();
+  render();
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(()=> t.classList.remove("show"), 2200);
+}
+
+/* تنظیمات / نقشه سفارشی */
+function openSettings(){
+  document.getElementById("topicInput").value = "";
+  document.getElementById("jsonInput").value = JSON.stringify(tree, null, 2);
+  document.getElementById("settingsModal").classList.add("show");
+}
+function closeSettings(){
+  document.getElementById("settingsModal").classList.remove("show");
+}
+function applyCustomTree(){
+  try{
+    const parsed = JSON.parse(document.getElementById("jsonInput").value);
+    if(!parsed.nodes || !Array.isArray(parsed.nodes)) throw new Error("ساختار نامعتبر");
+    tree = parsed;
+    localStorage.setItem(STORAGE_TREE, JSON.stringify(tree));
+    completed = new Set();
+    saveProgress();
+    render();
+    closeSettings();
+    showToast("نقشه راه جدید اعمال شد");
+  }catch(e){
+    alert("خطا در خواندن JSON: "+e.message);
+  }
+}
+
+/* پس‌زمینه ستاره‌ای */
+function drawStars(){
+  const canvas = document.getElementById("stars");
+  const ctx = canvas.getContext("2d");
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = document.body.scrollHeight;
+  }
+  resize();
+  const stars = [];
+  const count = Math.floor((canvas.width*canvas.height)/9000);
+  for(let i=0;i<count;i++){
+    stars.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*1.3+0.3,
+      o: Math.random()*0.6+0.15,
+      s: Math.random()*0.015+0.005,
+      dir: Math.random()>0.5?1:-1
+    });
+  }
+  function tick(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "#f3d999";
+    stars.forEach(s=>{
+      s.o += s.s*s.dir;
+      if(s.o>0.85||s.o<0.1) s.dir*=-1;
+      ctx.globalAlpha = s.o;
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(tick);
+  }
+  tick();
+  window.addEventListener("resize", ()=>{
+    resize();
+  });
+  setInterval(resize, 2000);
+}
+
+/* راه‌اندازی */
+loadTree();
+loadProgress();
+render();
+drawStars();
+</script>
+</body>
+<footer class="site-footer">
+    <p> <a href="https://www.karimzaadeh.ir" target="_blank" rel="noopener noreferrer">فرهاد کریم‌زاده | Farhad Karimzadeh</a></p>
+</footer>s
+</html>
