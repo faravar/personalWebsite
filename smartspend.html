@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت هوشمند بودجه و موجودی ماهانه</title>
+    <!-- لود فونت‌های استاندارد فارسی به عنوان وب‌فونت پشتیبان -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/vazirmatn-with-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+   
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* ارتفاع فوتر خود را اینجا مشخص کنید */
+}
+
+
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: auto; /* اگر مایلید همیشه پایین صفحه بماند */
+    font-size: 0.9rem;
+    color: var(--success, #a79fbb); /* استفاده از متغیر متنی که در کدها دارید */
+}
+
+.site-footer a {
+    color: var(--text-muted); /* یا هر رنگ شاخصی مثل گلد یا تال که در متغیرها تعریف کردید */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.site-footer a:hover {
+    color: var(--primary-hover); /* تغییر رنگ هنگام هاور */
+    text-decoration: underline;
+    text-decoration: none;
+}
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* اولویت اول با فونت ایران‌سنس است، اگر لود نشود وزیرمتن اعمال می‌شود */
+            font-family: 'IRANSans', 'IranSans', 'Vazirmatn', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* بخش کارت‌های وضعیت عمومی مالی */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .stat-card.total-income .value { color: var(--success); }
+        .stat-card.total-expense .value { color: var(--danger); }
+        .stat-card.wallet-balance .value { color: #0284c7; }
+        .stat-card.total-budget .value { color: var(--primary); }
+
+        /* بخش اصلی اس‌پی‌ای */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.21fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        /* فرم‌ها */
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                flex-direction: column;
+            }
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 11px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-primary { background-color: var(--primary); }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-success { background-color: var(--success); }
+        .btn-success:hover { background-color: #059669; }
+
+        /* وضعیت بودجه دسته‌ها و هشدار */
+        .category-budget-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-status-card {
+            background: var(--bg-color);
+            padding: 12px;
+            border-radius: 8px;
+            border-right: 4px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-status-card.danger-alert {
+            background-color: #fef2f2;
+            border-right-color: var(--danger);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .category-status-card.danger-alert .cat-usage {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        /* جدول تراکنش‌ها */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--text-muted);
+            background-color: #f1f5f9;
+        }
+
+        .text-income { color: var(--success); font-weight: bold; }
+        .text-expense { color: var(--danger); font-weight: bold; }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+        }
+
+        /* چارت دایره‌ای */
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .svg-chart { transform: rotate(-90deg); border-radius: 50%; }
+
+        .chart-legend {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 0.75rem;
+            margin-top: 15px;
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-color { width: 10px; height: 10px; border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>مدیریت هوشمند بودجه و موجودی جیب</h1>
+        <p id="current-date-display">بارگذاری تاریخ...</p>
+    </header>
+
+    <!-- کاردهای وضعیت: سیستم از اینجا موجودی کل شما را می‌فهمد -->
+    <div class="summary-grid">
+        <div class="stat-card wallet-balance">
+            <h3>💰 موجودی فعلی شما</h3>
+            <div class="value" id="wallet-balance-val">۰ تومان</div>
+        </div>
+        <div class="stat-card total-income">
+            <h3>📥 مجموع درآمدهای این ماه</h3>
+            <div class="value" id="total-income-val">۰ تومان</div>
+        </div>
+        <div class="stat-card total-expense">
+            <h3>📤 مجموع مخارج این ماه</h3>
+            <div class="value" id="total-expense-val">۰ تومان</div>
+        </div>
+        <div class="stat-card total-budget">
+            <h3>🎯 مجموع سقف بودجه‌ها</h3>
+            <div class="value" id="total-budget-val">۰ تومان</div>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <!-- ستون فرم‌ها -->
+        <div>
+            <!-- ۱. فرم ورود درآمد جدید -->
+            <div class="card">
+                <h2>📥 ثبت درآمد جدید (حقوق، واریزی، سود و...)</h2>
+                <form id="income-form">
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 2;">
+                            <label for="inc-title">منبع درآمد / توضیح</label>
+                            <input type="text" id="inc-title" class="form-control" placeholder="مثلا: حقوق پارت‌تایم، سود ترید" required>
+                        </div>
+                        <div class="form-group" style="flex: 1.5;">
+                            <label for="inc-amount">مبلغ (تومان)</label>
+                            <input type="number" id="inc-amount" class="form-control" placeholder="مثلا ۵۰۰۰۰۰۰" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">افزودن به موجودی</button>
+                </form>
+            </div>
+
+            <!-- ۲. فرم ورود هزینه جدید -->
+            <div class="card">
+                <h2>📤 ثبت هزینه جدید (مخارج)</h2>
+                <form id="expense-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exp-category">دسته‌بندی</label>
+                            <select id="exp-category" class="form-control">
+                                <option value="خوراک">خوراک</option>
+                                <option value="حمل‌ونقل">حمل‌ونقل</option>
+                                <option value="قبض و خانه">قبض و خانه</option>
+                                <option value="تفریح و سلامت">تفریح و سلامت</option>
+                                <option value="سایر">سایر</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exp-amount">مبلغ هزینه (تومان)</label>
+                            <input type="number" id="exp-amount" class="form-control" placeholder="مثلا ۵۰۰۰۰" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exp-title">بابت چه چیزی؟</label>
+                        <input type="text" id="exp-title" class="form-control" placeholder="مثلا خرید میوه" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">ثبت کسر از موجودی</button>
+                </form>
+            </div>
+
+            <!-- ۳. فرم تنظیم سقف بودجه برای دسته‌بندی‌ها -->
+            <div class="card">
+                <h2>🎯 تنظیم یا ویرایش سقف بودجه دسته‌ها</h2>
+                <div class="form-row" style="align-items: flex-end;">
+                    <div class="form-group">
+                        <label>دسته‌بندی</label>
+                        <select id="budget-category" class="form-control">
+                            <option value="خوراک">خوراک</option>
+                            <option value="حمل‌ونقل">حمل‌ونقل</option>
+                            <option value="قبض و خانه">قبض و خانه</option>
+                            <option value="تفریح و سلامت">تفریح و سلامت</option>
+                            <option value="سایر">سایر</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>سقف مجاز مخارج (تومان)</label>
+                        <input type="number" id="budget-amount" class="form-control" placeholder="مثلا ۲۰۰۰۰۰۰">
+                    </div>
+                    <button type="button" id="update-budget-btn" class="btn btn-primary" style="width: auto; height: 42px; padding: 0 20px; background-color:#6366f1;">ثبت</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ستون نمودار و تحلیل سقف بودجه -->
+        <div>
+            <div class="card">
+                <h2>📊 سهم مخارج در چارت دایره‌ای</h2>
+                <div class="chart-container">
+                    <svg width="160" height="160" viewBox="0 0 32 32" class="svg-chart" id="pie-chart">
+                        <circle r="16" cx="16" cy="16" fill="#f1f5f9" />
+                    </svg>
+                </div>
+                <div class="chart-legend" id="chart-legend"></div>
+
+                <h2 style="margin-top: 25px;"> وضعیت مصرف از سقف بودجه دسته‌ها</h2>
+                <div class="category-budget-list" id="category-list-wrapper"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- جدول تاریخچه جامع تراکنش‌ها -->
+    <div class="card">
+        <h2>📑 ریز تراکنش‌های این ماه (درآمدها و مخارج)</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تاریخ</th>
+                        <th>نوع</th>
+                        <th>دسته / منبع</th>
+                        <th>توضیحات</th>
+                        <th>مبلغ (تومان)</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        categories: ['خوراک', 'حمل‌ونقل', 'قبض و خانه', 'تفریح و سلامت', 'سایر'],
+        colors: {
+            'خوراک': '#3b82f6',
+            'حمل‌ونقل': '#eab308',
+            'قبض و خانه': '#a855f7',
+            'تفریح و سلامت': '#ec4899',
+            'سایر': '#64748b'
+        }
+    };
+
+    // اضافه شدن آرایه مستقل incomes برای نگهداری درآمدها
+    let state = {
+        incomes: JSON.parse(localStorage.getItem('wallet_incomes')) || [],
+        expenses: JSON.parse(localStorage.getItem('wallet_expenses')) || [],
+        budgets: JSON.parse(localStorage.getItem('wallet_targets')) || {
+            'خوراک': 2000000,
+            'حمل‌ونقل': 800000,
+            'قبض و خانه': 3000000,
+            'تفریح و سلامت': 1500000,
+            'سایر': 500000
+        }
+    };
+
+    function saveState() {
+        localStorage.setItem('wallet_incomes', JSON.stringify(state.incomes));
+        localStorage.setItem('wallet_expenses', JSON.stringify(state.expenses));
+        localStorage.setItem('wallet_targets', JSON.stringify(state.budgets));
+        render();
+    }
+
+    function formatMoney(num) {
+        return Number(num).toLocaleString('fa-IR') + ' تومان';
+    }
+
+    function render() {
+        document.getElementById('current-date-display').innerText = `امروز: ${new Intl.DateTimeFormat('fa-IR-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date())}`;
+
+        // ۱. محاسبه کل درآمدها
+        let totalIncome = 0;
+        state.incomes.forEach(inc => totalIncome += Number(inc.amount));
+
+        // ۲. محاسبه کل مخارج و تفکیک دسته‌ها
+        const categoryTotals = {};
+        CONFIG.categories.forEach(cat => categoryTotals[cat] = 0);
+        let totalExpense = 0;
+        state.expenses.forEach(exp => {
+            if(categoryTotals[exp.category] !== undefined) categoryTotals[exp.category] += Number(exp.amount);
+            totalExpense += Number(exp.amount);
+        });
+
+        // ۳. محاسبه موجودی زنده کیف پول بر اساس درآمد منهای مخارج
+        const currentWalletBalance = totalIncome - totalExpense;
+
+        // ۴. نمایش در کارت‌های اصلی
+        document.getElementById('total-income-val').innerText = formatMoney(totalIncome);
+        document.getElementById('total-expense-val').innerText = formatMoney(totalExpense);
+        
+        const balanceEl = document.getElementById('wallet-balance-val');
+        balanceEl.innerText = formatMoney(currentWalletBalance);
+        balanceEl.style.color = currentWalletBalance < 0 ? 'var(--danger)' : '#0284c7';
+
+        let totalBudget = 0;
+        CONFIG.categories.forEach(cat => totalBudget += state.budgets[cat]);
+        document.getElementById('total-budget-val').innerText = formatMoney(totalBudget);
+
+        // ۵. تحلیل سقف بودجه دسته‌ها و زدن آلرت رنگی در صورت عبور از لیمیت
+        const listWrapper = document.getElementById('category-list-wrapper');
+        listWrapper.innerHTML = '';
+        CONFIG.categories.forEach(cat => {
+            const spent = categoryTotals[cat];
+            const allowed = state.budgets[cat];
+            const isOverBudget = spent > allowed;
+
+            const card = document.createElement('div');
+            card.className = `category-status-card ${isOverBudget ? 'danger-alert' : ''}`;
+            card.style.borderRightColor = CONFIG.colors[cat];
+            card.innerHTML = `
+                <div>
+                    <strong>${cat}</strong>
+                    <div style="font-size:0.75rem; color:var(--text-muted)">سقف مجاز: ${formatMoney(allowed)}</div>
+                </div>
+                <div class="cat-usage">${formatMoney(spent)} ${isOverBudget ? '⚠️ مازاد!' : ''}</div>
+            `;
+            listWrapper.appendChild(card);
+        });
+
+        // ۶. بروزرسانی چارت دایره‌ای SVG مخارج
+        const pieChart = document.getElementById('pie-chart');
+        const legendContainer = document.getElementById('chart-legend');
+        pieChart.innerHTML = '<circle r="16" cx="16" cy="16" fill="#f1f5f9" />';
+        legendContainer.innerHTML = '';
+
+        let accumulatedPercentage = 0;
+        CONFIG.categories.forEach(cat => {
+            const spent = categoryTotals[cat];
+            const percentage = totalExpense > 0 ? (spent / totalExpense) * 100 : 0;
+
+            if (percentage > 0) {
+                const strokeDasharray = `${percentage} ${100 - percentage}`;
+                const strokeDashoffset = -accumulatedPercentage;
+                const circleSegment = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circleSegment.setAttribute("r", "16"); circleSegment.setAttribute("cx", "16"); circleSegment.setAttribute("cy", "16");
+                circleSegment.setAttribute("fill", "transparent"); circleSegment.setAttribute("stroke", CONFIG.colors[cat]);
+                circleSegment.setAttribute("stroke-width", "32"); circleSegment.setAttribute("stroke-dasharray", strokeDasharray);
+                circleSegment.setAttribute("stroke-dashoffset", strokeDashoffset);
+                pieChart.appendChild(circleSegment);
+                accumulatedPercentage += percentage;
+            }
+
+            const legendItem = document.createElement('div');
+            legendItem.className = 'legend-item';
+            legendItem.innerHTML = `<div class="legend-color" style="background-color: ${CONFIG.colors[cat]}"></div><span>${cat} (${Math.round(percentage)}%)</span>`;
+            legendContainer.appendChild(legendItem);
+        });
+
+        // ۷. ادغام درآمدها و مخارج در جدول تاریخچه بر اساس زمان برای نمایش یکپارچه
+        const tbody = document.getElementById('transactions-tbody');
+        tbody.innerHTML = '';
+
+        let allTransactions = [];
+        state.incomes.forEach(inc => allTransactions.push({...inc, type: 'income'}));
+        state.expenses.forEach(exp =>  allTransactions.push({...exp, type: 'expense'}));
+
+        // مرتب‌سازی از جدیدترین به قدیمی‌ترین بر اساس دیت‌استمپ ID
+        allTransactions.sort((a, b) => b.id - a.id);
+
+        if(allTransactions.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">هنوز هیچ درآمد یا هزینه‌ای ثبت نشده است.</td></tr>`;
+        } else {
+            allTransactions.forEach(tx => {
+                const tr = document.createElement('tr');
+                const isInc = tx.type === 'income';
+                tr.innerHTML = `
+                    <td>${tx.date}</td>
+                    <td class="${isInc ? 'text-income' : 'text-expense'}">${isInc ? '📥 درآمد' : '📤 هزینه'}</td>
+                    <td>${isInc ? 'واریزی' : `<span style="border-bottom: 2px solid ${CONFIG.colors[tx.category]}">${tx.category}</span>`}</td>
+                    <td>${tx.title}</td>
+                    <td class="${isInc ? 'text-income' : 'text-expense'}">${isInc ? '+' : '-'}${Number(tx.amount).toLocaleString('fa-IR')}</td>
+                    <td><button class="delete-btn" onclick="deleteTransaction('${tx.type}', ${tx.id})">❌</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
+
+    // هندلر ثبت درآمد
+    document.getElementById('income-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const title = document.getElementById('inc-title').value;
+        const amount = document.getElementById('inc-amount').value;
+        const todayJalali = new Intl.DateTimeFormat('fa-IR-u-nu-latn').format(new Date());
+
+        state.incomes.push({ id: Date.now(), amount: Number(amount), title: title, date: todayJalali });
+        document.getElementById('inc-title').value = '';
+        document.getElementById('inc-amount').value = '';
+        saveState();
+    });
+
+    // هندلر ثبت هزینه
+    document.getElementById('expense-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const amount = document.getElementById('exp-amount').value;
+        const category = document.getElementById('exp-category').value;
+        const title = document.getElementById('exp-title').value;
+        const todayJalali = new Intl.DateTimeFormat('fa-IR-u-nu-latn').format(new Date());
+
+        state.expenses.push({ id: Date.now(), amount: Number(amount), category: category, title: title, date: todayJalali });
+        document.getElementById('exp-amount').value = '';
+        document.getElementById('exp-title').value = '';
+        saveState();
+    });
+
+    // هندلر تغییر بودجه مجاز دسته‌ها
+    document.getElementById('update-budget-btn').addEventListener('click', function() {
+        const cat = document.getElementById('budget-category').value;
+        const amount = document.getElementById('budget-amount').value;
+        if(!amount || amount <= 0) return;
+        state.budgets[cat] = Number(amount);
+        document.getElementById('budget-amount').value = '';
+        saveState();
+    });
+
+    // حذف دقیق تراکنش بر اساس شناسه و نوع آن
+    window.deleteTransaction = function(type, id) {
+        if(type === 'income') {
+            state.incomes = state.incomes.filter(inc => inc.id !== id);
+        } else {
+            state.expenses = state.expenses.filter(exp => exp.id !== id);
+        }
+        saveState();
+    };
+
+    render();
+</script>
+</body>
+<footer class="site-footer">
+    <p> <a href="https://www.karimzaadeh.ir" target="_blank" rel="noopener noreferrer">فرهاد کریم‌زاده | Farhad Karimzadeh</a></p>
+</footer>
+</html>
