@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>کارهای من</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+   
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* ارتفاع فوتر خود را اینجا مشخص کنید */
+}
+
+
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: auto; /* اگر مایلید همیشه پایین صفحه بماند */
+    font-size: 0.9rem;
+    color: var(--text-dim, #a79fbb); /* استفاده از متغیر متنی که در کدها دارید */
+}
+
+.site-footer a {
+    color: var(--text-dim); /* یا هر رنگ شاخصی مثل گلد یا تال که در متغیرها تعریف کردید */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.site-footer a:hover {
+    color: #ffffff; /* تغییر رنگ هنگام هاور */
+    text-decoration: underline;
+    text-decoration: none;
+}
+  @font-face {
+    font-family: 'IRANSans';
+    src: url('https://cdn.jsdelivr.net/npm/iransans@1.0.0/woff2/IRANSansWeb_UltraLight.woff2') format('woff2');
+    font-weight: 200;
+  }
+  @font-face {
+    font-family: 'IRANSans';
+    src: url('https://cdn.jsdelivr.net/npm/iransans@1.0.0/woff2/IRANSansWeb_Light.woff2') format('woff2');
+    font-weight: 300;
+  }
+  @font-face {
+    font-family: 'IRANSans';
+    src: url('https://cdn.jsdelivr.net/npm/iransans@1.0.0/woff2/IRANSansWeb.woff2') format('woff2');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'IRANSans';
+    src: url('https://cdn.jsdelivr.net/npm/iransans@1.0.0/woff2/IRANSansWeb_Medium.woff2') format('woff2');
+    font-weight: 500;
+  }
+  @font-face {
+    font-family: 'IRANSans';
+    src: url('https://cdn.jsdelivr.net/npm/iransans@1.0.0/woff2/IRANSansWeb_Bold.woff2') format('woff2');
+    font-weight: 700;
+  }
+  * { font-family: 'IRANSans', Tahoma, sans-serif; }
+</style>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: { 950: '#0a0d13', 900: '#0f131b', 800: '#161c27', 700: '#1e2634', 600: '#2a3444' },
+          brass: { 300: '#f0cf8e', 400: '#e2b968', 500: '#d4a54a', 600: '#b3873a', 700: '#8f6c2e' },
+        },
+        fontFamily: { sans: ['IRANSans', 'Tahoma', 'sans-serif'] },
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-ink-950 min-h-screen text-slate-100 antialiased">
+
+<!-- بک‌گراند تزئینی: الگوی ستاره‌های هندسی محو -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none">
+  <svg class="absolute -top-24 -right-24 w-96 h-96 opacity-[0.07]" viewBox="0 0 100 100">
+    <g stroke="#d4a54a" stroke-width="0.4" fill="none">
+      <circle cx="50" cy="50" r="46"/>
+      <circle cx="50" cy="50" r="34"/>
+      <circle cx="50" cy="50" r="22"/>
+      <line x1="4" y1="50" x2="96" y2="50"/>
+      <line x1="50" y1="4" x2="50" y2="96"/>
+      <line x1="15" y1="15" x2="85" y2="85"/>
+      <line x1="85" y1="15" x2="15" y2="85"/>
+    </g>
+  </svg>
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-ink-950/40 to-ink-950"></div>
+</div>
+
+<div class="relative max-w-md mx-auto px-4 py-10">
+
+  <!-- هدر -->
+  <header class="mb-8 text-center">
+    <p class="text-[11px] tracking-widest text-brass-500/80 font-light mb-2">امروز را دقیق بساز</p>
+    <h1 class="text-4xl font-bold bg-gradient-to-l from-brass-300 via-brass-400 to-brass-600 bg-clip-text text-transparent">
+      کارهای من
+    </h1>
+    <p id="today-date" class="text-xs text-slate-500 font-light mt-2"></p>
+  </header>
+
+  <!-- دکمه‌ی باز/بسته کردن فرم افزودن -->
+  <button id="toggle-add-btn"
+    class="w-full flex items-center justify-between bg-ink-900/80 backdrop-blur border border-white/5 hover:border-brass-500/30 rounded-2xl px-5 py-3.5 mb-3 transition group">
+    <span class="flex items-center gap-2 text-sm text-slate-300 group-hover:text-brass-400 transition">
+      <span id="toggle-icon" class="text-brass-500 text-lg leading-none transition-transform duration-300">+</span>
+      کار جدید
+    </span>
+    <span class="text-[11px] text-slate-600">افزودن</span>
+  </button>
+
+  <!-- فرم افزودن (آکاردئون) -->
+  <div id="add-panel" class="grid transition-all duration-300 ease-out" style="grid-template-rows: 0fr; opacity: 0;">
+    <div class="overflow-hidden">
+      <div class="bg-ink-900/80 backdrop-blur border border-white/5 rounded-2xl p-5 mb-4 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)]">
+        <div class="flex gap-2">
+          <input id="task-input" type="text" maxlength="200" placeholder="یک کار جدید بنویس..."
+            class="flex-1 bg-ink-800 border border-ink-600 focus:border-brass-500 rounded-xl px-4 py-3 text-sm outline-none transition placeholder:text-slate-500">
+        </div>
+
+        <div class="flex items-center gap-2 mt-3 text-xs">
+          <label for="time-start" class="text-slate-500 whitespace-nowrap">از</label>
+          <input id="time-start" type="time"
+            class="flex-1 bg-ink-800 border border-ink-600 focus:border-brass-500 rounded-lg px-2 py-1.5 text-xs outline-none transition text-slate-200 [color-scheme:dark]">
+          <span class="text-slate-600">تا</span>
+          <input id="time-end" type="time"
+            class="flex-1 bg-ink-800 border border-ink-600 focus:border-brass-500 rounded-lg px-2 py-1.5 text-xs outline-none transition text-slate-200 [color-scheme:dark]">
+        </div>
+
+        <div class="flex gap-2 mt-4">
+          <button id="add-btn"
+            class="flex-1 bg-gradient-to-b from-brass-400 to-brass-600 hover:from-brass-300 hover:to-brass-500 text-ink-950 font-bold text-sm rounded-xl py-2.5 transition active:scale-95">
+            افزودن کار
+          </button>
+          <button id="cancel-add-btn"
+            class="px-5 bg-ink-800 hover:bg-ink-700 text-slate-400 text-sm rounded-xl transition">
+            انصراف
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- فیلترها -->
+  <div class="flex gap-1.5 mb-4">
+    <button data-filter="all" class="filter-btn flex-1 rounded-xl py-2 text-xs font-medium transition bg-brass-500 text-ink-950">همه</button>
+    <button data-filter="active" class="filter-btn flex-1 rounded-xl py-2 text-xs font-medium transition bg-ink-900/80 border border-white/5 text-slate-400">انجام‌نشده</button>
+    <button data-filter="done" class="filter-btn flex-1 rounded-xl py-2 text-xs font-medium transition bg-ink-900/80 border border-white/5 text-slate-400">انجام‌شده</button>
+  </div>
+
+
+  <!-- لیست -->
+  <div class="bg-ink-900/80 backdrop-blur border border-white/5 rounded-2xl p-5 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)]">
+    <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+      <span id="stats-text">۰ کار</span>
+      <span id="stats-progress"></span>
+    </div>
+    <div class="h-1 bg-ink-800 rounded-full overflow-hidden mb-4">
+      <div id="progress-bar" class="h-full bg-gradient-to-l from-brass-300 to-brass-600 transition-all duration-500" style="width:0%"></div>
+    </div>
+
+    <ul id="list" class="divide-y divide-white/5"></ul>
+    <p id="empty-msg" class="hidden text-center text-slate-600 text-sm py-8">فعلاً کاری ثبت نشده 🌙</p>
+
+    <div class="text-center mt-3">
+      <button id="clear-btn" class="text-[11px] text-slate-600 hover:text-brass-500 underline transition">پاک‌کردن انجام‌شده‌ها</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* چک‌باکس ستاره هشت‌پر: دو لوزی روی‌هم که ستاره اسلیمی می‌سازند */
+  .star-check {
+    position: relative;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .star-check .diamond {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    background: transparent;
+    border: 2px solid #7a8296;
+    transition: background .25s ease, border-color .25s ease;
+  }
+  .star-check .diamond.r2 { transform: rotate(45deg); }
+  .star-check.done .diamond {
+    background: linear-gradient(135deg, #f0cf8e, #d4a54a);
+    border-color: #d4a54a;
+  }
+  .star-check.done { animation: pop .3s ease; }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+  li.task-row { animation: rise .25s ease; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'todo-spa-tasks-v1';
+  let tasks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let currentFilter = 'all';
+
+  const listEl = document.getElementById('list');
+  const inputEl = document.getElementById('task-input');
+  const timeStartEl = document.getElementById('time-start');
+  const timeEndEl = document.getElementById('time-end');
+  const addBtn = document.getElementById('add-btn');
+  const emptyMsg = document.getElementById('empty-msg');
+  const statsText = document.getElementById('stats-text');
+  const statsProgress = document.getElementById('stats-progress');
+  const progressBar = document.getElementById('progress-bar');
+  const clearBtn = document.getElementById('clear-btn');
+
+  const toPersianDigits = (n) => n.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+
+  function formatDate(ts) {
+    const d = new Date(ts);
+    const time = d.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+    return toPersianDigits(time);
+  }
+
+  function todayHeader() {
+    const d = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('today-date').textContent = d.toLocaleDateString('fa-IR', options);
+  }
+
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
+
+  function addTask(text) {
+    text = text.trim();
+    if (!text) return;
+    const startTime = timeStartEl.value || null;
+    const endTime = timeEndEl.value || null;
+    tasks.unshift({ id: Date.now(), text, done: false, createdAt: Date.now(), startTime, endTime });
+    save();
+    render();
+  }
+
+  function clearInputs() {
+    inputEl.value = '';
+    timeStartEl.value = '';
+    timeEndEl.value = '';
+  }
+
+  function formatTimeRange(t) {
+    if (!t.startTime && !t.endTime) return '';
+    const s = t.startTime ? toPersianDigits(t.startTime) : '؟';
+    const e = t.endTime ? toPersianDigits(t.endTime) : '؟';
+    if (t.startTime && t.endTime) return `${s} تا ${e}`;
+    if (t.startTime) return `از ${s}`;
+    return `تا ${e}`;
+  }
+
+  function toggleTask(id) {
+    const t = tasks.find(x => x.id === id);
+    if (t) t.done = !t.done;
+    save();
+    render();
+  }
+
+  function deleteTask(id) {
+    tasks = tasks.filter(x => x.id !== id);
+    save();
+    render();
+  }
+
+  function clearDone() {
+    tasks = tasks.filter(x => !x.done);
+    save();
+    render();
+  }
+
+  function render() {
+    let filtered = tasks;
+    if (currentFilter === 'active') filtered = tasks.filter(t => !t.done);
+    if (currentFilter === 'done') filtered = tasks.filter(t => t.done);
+
+    listEl.innerHTML = '';
+    emptyMsg.classList.toggle('hidden', filtered.length !== 0);
+
+    filtered.forEach(t => {
+      const li = document.createElement('li');
+      li.className = 'task-row flex items-center gap-3 py-3';
+
+      const check = document.createElement('div');
+      check.className = 'star-check' + (t.done ? ' done' : '');
+      check.innerHTML = '<div class="diamond r1"></div><div class="diamond r2"></div>';
+      check.onclick = () => toggleTask(t.id);
+
+      const textWrap = document.createElement('div');
+      textWrap.className = 'flex-1 min-w-0';
+
+      const span = document.createElement('p');
+      span.className = 'text-sm leading-6 break-words transition ' + (t.done ? 'text-slate-600 line-through' : 'text-slate-100');
+      span.textContent = t.text;
+
+      const metaRow = document.createElement('div');
+      metaRow.className = 'flex items-center gap-2 mt-1 flex-wrap';
+
+      const dateSpan = document.createElement('span');
+      dateSpan.className = 'text-[11px] text-slate-600';
+      dateSpan.textContent = formatDate(t.createdAt);
+      metaRow.appendChild(dateSpan);
+
+      const rangeText = formatTimeRange(t);
+      if (rangeText) {
+        const rangeSpan = document.createElement('span');
+        rangeSpan.className = 'text-[11px] text-brass-400 bg-brass-500/10 border border-brass-500/20 rounded-full px-2 py-0.5';
+        rangeSpan.textContent = '⏱ ' + rangeText;
+        metaRow.appendChild(rangeSpan);
+      }
+
+      textWrap.appendChild(span);
+      textWrap.appendChild(metaRow);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'text-slate-700 hover:text-red-400 transition text-base px-1';
+      delBtn.innerHTML = '✕';
+      delBtn.onclick = () => deleteTask(t.id);
+
+      li.appendChild(check);
+      li.appendChild(textWrap);
+      li.appendChild(delBtn);
+      listEl.appendChild(li);
+    });
+
+    const total = tasks.length;
+    const doneCount = tasks.filter(t => t.done).length;
+    statsText.textContent = toPersianDigits(total) + ' کار';
+    statsProgress.textContent = total ? `${toPersianDigits(doneCount)} از ${toPersianDigits(total)} انجام شده` : '';
+    progressBar.style.width = total ? `${Math.round((doneCount / total) * 100)}%` : '0%';
+  }
+
+  addBtn.onclick = () => {
+    if (!inputEl.value.trim()) { inputEl.focus(); return; }
+    addTask(inputEl.value);
+    clearInputs();
+    closePanel();
+  };
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      if (!inputEl.value.trim()) return;
+      addTask(inputEl.value);
+      clearInputs();
+      closePanel();
+    }
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('bg-brass-500', 'text-ink-950');
+        b.classList.add('bg-ink-900/80', 'border', 'border-white/5', 'text-slate-400');
+      });
+      btn.classList.remove('bg-ink-900/80', 'border', 'border-white/5', 'text-slate-400');
+      btn.classList.add('bg-brass-500', 'text-ink-950');
+      currentFilter = btn.dataset.filter;
+      render();
+    };
+  });
+
+  // باز/بسته کردن فرم افزودن
+  const toggleAddBtn = document.getElementById('toggle-add-btn');
+  const toggleIcon = document.getElementById('toggle-icon');
+  const addPanel = document.getElementById('add-panel');
+  const cancelAddBtn = document.getElementById('cancel-add-btn');
+  let panelOpen = false;
+
+  function openPanel() {
+    panelOpen = true;
+    addPanel.style.gridTemplateRows = '1fr';
+    addPanel.style.opacity = '1';
+    toggleIcon.style.transform = 'rotate(45deg)';
+    setTimeout(() => inputEl.focus(), 150);
+  }
+
+  function closePanel() {
+    panelOpen = false;
+    addPanel.style.gridTemplateRows = '0fr';
+    addPanel.style.opacity = '0';
+    toggleIcon.style.transform = 'rotate(0deg)';
+  }
+
+  toggleAddBtn.onclick = () => { panelOpen ? closePanel() : openPanel(); };
+  cancelAddBtn.onclick = () => { clearInputs(); closePanel(); };
+
+  clearBtn.onclick = clearDone;
+
+  todayHeader();
+  render();
+</script>
+</body>
+<footer class="site-footer">
+    <p> <a href="https://www.karimzaadeh.ir" target="_blank" rel="noopener noreferrer">فرهاد کریم‌زاده | Farhad Karimzadeh</a></p>
+</footer>
+</html>
