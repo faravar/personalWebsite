@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اتلو مدرن | Othello Glassmorphism</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'Tahoma', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+         html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    margin-bottom: 50px;
+   
+}
+
+footer {
+    position: absolute;
+padding-top: 100px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* ارتفاع فوتر خود را اینجا مشخص کنید */
+}
+
+
+.site-footer {
+    text-align: center;
+   
+   
+    font-size: 0.9rem;
+    color: var(--text-dim, #a79fbb); /* استفاده از متغیر متنی که در کدها دارید */
+}
+
+.site-footer a {
+    color: var(--teal); /* یا هر رنگ شاخصی مثل گلد یا تال که در متغیرها تعریف کردید */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.site-footer a:hover {
+    color: #ffffff; /* تغییر رنگ هنگام هاور */
+    text-decoration: underline;
+    text-decoration: none;
+}
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-image: radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15), transparent), radial-gradient(circle at 80% 80%, rgba(217, 70, 239, 0.15), transparent);
+        }
+        /* Glassmorphism Styles */
+        .glass {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300 flex flex-col items-center justify-center p-4">
+
+    <header class="w-full max-w-md flex justify-between items-center mb-6 z-10">
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">ریورسی / اتلو</h1>
+        <button id="theme-toggle" class="p-2 rounded-xl glass hover:scale-105 active:scale-95 transition-all shadow-sm">
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 14.121l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 111.414 1.414zm-.707-11.314a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414l-.707-.707zM3 10a1 1 0 011-1h1a1 1 0 110 2H4a1 1 0 01-1-1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        </button>
+    </header>
+
+    <div class="w-full max-w-md glass rounded-2xl p-4 mb-6 flex justify-between items-center shadow-lg backdrop-blur-md">
+        <div class="flex items-center gap-3">
+            <div id="player-black-indicator" class="w-6 h-6 rounded-full bg-slate-900 border-2 border-white dark:border-slate-700 shadow transition-all duration-300"></div>
+            <div class="text-right">
+                <p class="text-xs opacity-75">سیاه</p>
+                <p id="score-black" class="text-xl font-bold">2</p>
+            </div>
+        </div>
+        
+        <div id="game-status" class="text-sm font-medium text-center bg-indigo-500/10 dark:bg-indigo-500/20 px-4 py-1.5 rounded-full text-indigo-600 dark:text-indigo-400">
+            نوبت مهره سیاه
+        </div>
+
+        <div class="flex items-center gap-3 flex-row-reverse">
+            <div id="player-white-indicator" class="w-6 h-6 rounded-full bg-white border-2 border-slate-300 shadow transition-all duration-300"></div>
+            <div class="text-left">
+                <p class="text-xs opacity-75">سفید</p>
+                <p id="score-white" class="text-xl font-bold">2</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full max-w-md aspect-square glass rounded-2xl p-3 shadow-2xl relative">
+        <div id="board" class="w-full h-full grid grid-cols-8 grid-rows-8 gap-1 bg-slate-400/20 dark:bg-slate-900/40 rounded-xl p-1">
+            </div>
+    </div>
+
+    <button id="reset-btn" class="mt-6 px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-bold rounded-xl shadow-md hover:shadow-indigo-500/20 transform hover:-translate-y-0.5 active:translate-y-0 transition-all" style="margin-bottom: 50px;">
+        شروع مجدد بازی
+    </button>
+    <script>
+        // تعریف ثابت‌ها و وضعیت بازی
+        const BOARD_SIZE = 8;
+        const EMPTY = 0;
+        const BLACK = 1;
+        const WHITE = 2;
+        
+        let board = [];
+        let turn = BLACK; // بازی همیشه با سیاه شروع می‌شود
+
+        // جهت‌های ۸ گانه برای حرکت در ماتریس (افقی، عمودی، مورب)
+        const DIRECTIONS = [
+            [-1, -1], [-1, 0], [-1, 1],
+            [0, -1],           [0, 1],
+            [1, -1],  [1, 0],  [1, 1]
+        ];
+
+        // عناصر DOM
+        const boardEl = document.getElementById('board');
+        const scoreBlackEl = document.getElementById('score-black');
+        const scoreWhiteEl = document.getElementById('score-white');
+        const gameStatusEl = document.getElementById('game-status');
+        const resetBtn = document.getElementById('reset-btn');
+        const pBlackInd = document.getElementById('player-black-indicator');
+        const pWhiteInd = document.getElementById('player-white-indicator');
+
+        // ۱. مقداردهی اولیه بازی
+        function initGame() {
+            // ساخت ماتریس خالی ۸ در ۸
+            board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(EMPTY));
+            
+            // چیدمان ۴ مهره وسط زمین طبق قوانین اتلو
+            board[3][3] = WHITE;
+            board[3][4] = BLACK;
+            board[4][3] = BLACK;
+            board[4][4] = WHITE;
+            
+            turn = BLACK;
+            renderBoard();
+            updateUI();
+        }
+
+        // ۲. الگوریتم اصلی: بررسی معتبر بودن حرکت و پیدا کردن مهره‌های قابل تغییر رنگ
+        function getFlippablePieces(row, col, player) {
+            if (board[row][col] !== EMPTY) return [];
+            
+            let piecesToFlip = [];
+            const opponent = player === BLACK ? WHITE : ';';
+
+            // حرکت در هر ۸ جهت
+            for (const [dr, dc] of DIRECTIONS) {
+                let r = row + dr;
+                let c = col + dc;
+                let candidates = [];
+
+                // تا زمانی که داخل زمین هستیم و مهره حریف قرار دارد جلو برو
+                while (r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE && board[r][c] === (player === BLACK ? WHITE : BLACK)) {
+                    candidates.push([r, c]);
+                    r += dr;
+                    c += dc;
+                }
+
+                // اگر به مهره خودی رسیدیم، یعنی مهره‌های حریف محاصره شده‌اند
+                if (r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE && board[r][c] === player) {
+                    if (candidates.length > 0) {
+                        piecesToFlip = piecesToFlip.concat(candidates);
+                    }
+                }
+            }
+            return piecesToFlip;
+        }
+
+        // بررسی اینکه آیا بازیکن فعلی اصلاً حرکت مجاز دارد یا خیر
+        function hasValidMove(player) {
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    if (getFlippablePieces(r, c, player).length > 0) return true;
+                }
+            }
+            return false;
+        }
+
+        // ۳. مدیریت کلیک روی خانه‌ها
+        function handleCellClick(row, col) {
+            const flippable = getFlippablePieces(row, col, turn);
+            
+            if (flippable.length === 0) return; // حرکت غیرمجاز است
+
+            // قرار دادن مهره جدید
+            board[row][col] = turn;
+            
+            // تغییر رنگ مهره‌های محاصره شده
+            flippable.forEach(([r, c]) => {
+                board[r][c] = turn;
+            });
+
+            // تغییر نوبت به بازیکن بعدی
+            const nextPlayer = turn === BLACK ? WHITE : BLACK;
+            
+            if (hasValidMove(nextPlayer)) {
+                turn = nextPlayer;
+            } else if (!hasValidMove(turn)) {
+                // اگر هیچکدام حرکت مجاز نداشتند، بازی تمام است
+                turn = EMPTY; 
+            } else {
+                alert(`بازیکن ${nextPlayer === BLACK ? 'سیاه' : 'سفید'} حرکتی ندارد! نوبت دوباره با شماست.`);
+            }
+
+            renderBoard();
+            updateUI();
+        }
+
+        // ۴. رندر کردن گرافیکی زمین بازی
+        function renderBoard() {
+            boardEl.innerHTML = '';
+            
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    const cell = document.createElement('button');
+                    cell.className = 'relative flex items-center justify-center rounded-lg bg-slate-500/10 dark:bg-slate-400/5 hover:bg-indigo-500/20 dark:hover:bg-indigo-500/30 transition-all duration-200 focus:outline-none aspect-square';
+                    
+                    const flippable = turn !== EMPTY ? getFlippablePieces(r, c, turn) : [];
+                    
+                    // نمایش راهنمای حرکات مجاز (Hint)
+                    if (flippable.length > 0) {
+                        const hint = document.createElement('div');
+                        hint.className = 'w-3 h-3 rounded-full bg-indigo-500/40 dark:bg-indigo-400/40 animate-pulse';
+                        cell.appendChild(hint);
+                        cell.addEventListener('click', () => handleCellClick(r, c));
+                    }
+
+                    // ساخت مهره‌ها
+                    if (board[r][c] !== EMPTY) {
+                        const piece = document.createElement('div');
+                        piece.className = `w-4/5 h-4/5 rounded-full shadow-md transform transition-all duration-500 ${
+                            board[r][c] === BLACK 
+                                ? 'bg-gradient-to-br from-slate-800 to-slate-950 border border-slate-700 scale-100' 
+                                : 'bg-gradient-to-br from-white to-slate-200 border border-slate-300 scale-100'
+                        }`;
+                        // افکت چرخش (Flip) هنگام قرارگیری یا تغییر رنگ
+                        cell.appendChild(piece);
+                    }
+
+                    boardEl.appendChild(cell);
+                }
+            }
+        }
+
+        // ۵. به‌روزرسانی رابط کاربری (امتیازها و وضعیت)
+        function updateUI() {
+            let blackCount = 0;
+            let whiteCount = 0;
+
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    if (board[r][c] === BLACK) blackCount++;
+                    if (board[r][c] === WHITE) whiteCount++;
+                }
+            }
+
+            scoreBlackEl.textContent = blackCount;
+            scoreWhiteEl.textContent = whiteCount;
+
+            // انیمیشن اکتیو بودن نوبت بازیکن
+            if (turn === BLACK) {
+                pBlackInd.classList.add('scale-125', 'ring-4', 'ring-indigo-500/50');
+                pWhiteInd.classList.remove('scale-125', 'ring-4', 'ring-indigo-500/50');
+                gameStatusEl.textContent = 'نوبت مهره سیاه';
+            } else if (turn === WHITE) {
+                pWhiteInd.classList.add('scale-125', 'ring-4', 'ring-indigo-500/50');
+                pBlackInd.classList.remove('scale-125', 'ring-4', 'ring-indigo-500/50');
+                gameStatusEl.textContent = 'نوبت مهره سفید';
+            } else {
+                // پایان بازی
+                pBlackInd.classList.remove('scale-125', 'ring-4');
+                pWhiteInd.classList.remove('scale-125', 'ring-4');
+                if (blackCount > whiteCount) {
+                    gameStatusEl.textContent = 'سیاه برنده شد! 🏆';
+                } else if (whiteCount > blackCount) {
+                    gameStatusEl.textContent = 'سفید برنده شد! 🏆';
+                } else {
+                    gameStatusEl.textContent = 'بازی مساوی شد! 🤝';
+                }
+            }
+        }
+
+        // ۶. دکمه سوئیچ لایت ماد / دارک ماد
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        function updateThemeIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            updateThemeIcons();
+        });
+
+        resetBtn.addEventListener('click', initGame);
+
+        // اجرای اولیه بازی
+        initGame();
+        updateThemeIcons();
+    </script>
+    
+</body>
+<footer class="site-footer">
+    <p> <a href="https://www.karimzaadeh.ir" target="_blank" rel="noopener noreferrer">فرهاد کریم‌زاده | Farhad Karimzadeh</a></p>
+</footer>
+</html>
