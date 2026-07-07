@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بازی دوز هوشمند و مدرن</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['IRANSans', 'Vazirmatn', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <!-- لود فونت برای اطمینان از نمایش صحیح ظاهر متن‌ها -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+         html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+   
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* ارتفاع فوتر خود را اینجا مشخص کنید */
+}
+
+
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: auto; /* اگر مایلید همیشه پایین صفحه بماند */
+    font-size: 0.9rem;
+    color: var(--text-dim, #a79fbb); /* استفاده از متغیر متنی که در کدها دارید */
+}
+
+.site-footer a {
+    color: var(--text-dim); /* یا هر رنگ شاخصی مثل گلد یا تال که در متغیرها تعریف کردید */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.site-footer a:hover {
+    color: #ffffff; /* تغییر رنگ هنگام هاور */
+    text-decoration: underline;
+    text-decoration: none;
+}
+        @font-face {
+            font-family: 'IRANSans';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
+        }
+        body {
+            font-family: 'IRANSans', 'Vazirmatn', sans-serif;
+            background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
+        }
+        .winning-cell {
+            animation: pulse 1.5s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(236, 72, 153, 0.5); }
+            100% { transform: scale(1.05); box-shadow: 0 0 25px rgba(236, 72, 153, 0.9); }
+        }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen flex flex-col items-center justify-center p-4 selection:bg-pink-500 selection:text-white">
+
+    <div class="w-full max-w-md mx-auto text-center">
+        <!-- هدر ثابت بازی -->
+        <h1 class="text-4xl font-black mb-2 tracking-wide bg-gradient-to-l from-pink-500 via-purple-500 to-cyan-400 bg-clip-text text-transparent drop-shadow-sm">
+            بازی دوز مـدرن
+        </h1>
+        <p class="text-slate-400 text-sm mb-8 font-light" id="subHeader">یک نبرد هوشمندانه و جذاب</p>
+
+        <!-- بخش اول: منوی انتخاب حالت بازی -->
+        <div id="setupMenu" class="bg-slate-800/50 p-6 rounded-3xl border border-slate-700/50 backdrop-blur-sm shadow-2xl transition-all duration-300">
+            <h2 class="text-lg font-bold mb-6 text-slate-300">حالت بازی خود را انتخاب کنید:</h2>
+            <div class="space-y-4">
+                <button id="singlePlayerBtn" class="w-full bg-slate-900/80 hover:bg-slate-700/60 border border-cyan-500/30 hover:border-cyan-400 text-cyan-400 font-bold py-4 px-6 rounded-2xl transition-all duration-200 flex items-center justify-between group shadow-lg">
+                    <span>🤖 رقابت با سیستم (تک‌نفره)</span>
+                    <span class="transform group-hover:-translate-x-1 transition-transform">←</span>
+                </button>
+                <button id="multiPlayerBtn" class="w-full bg-slate-900/80 hover:bg-slate-700/60 border border-pink-500/30 hover:border-pink-400 text-pink-400 font-bold py-4 px-6 rounded-2xl transition-all duration-200 flex items-center justify-between group shadow-lg">
+                    <span>👥 بازی دو نفره</span>
+                    <span class="transform group-hover:-translate-x-1 transition-transform">←</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- بخش دوم: محیط اصلی بازی (در ابتدا پنهان است) -->
+        <div id="gameContainer" class="hidden transition-all duration-500 opacity-0 transform scale-95">
+            <!-- تابلوی امتیازات -->
+            <div class="grid grid-cols-3 gap-3 mb-6 bg-slate-800/50 p-3 rounded-2xl border border-slate-700/50 backdrop-blur-sm shadow-xl">
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-cyan-500/20">
+                    <div class="text-xs text-slate-400 mb-1" id="labelPlayerX">بازیکن X</div>
+                    <div id="scoreX" class="text-xl font-bold text-cyan-400">0</div>
+                </div>
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/20">
+                    <div class="text-xs text-slate-400 mb-1">مساوی</div>
+                    <div id="scoreDraws" class="text-xl font-bold text-slate-300">0</div>
+                </div>
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-pink-500/20">
+                    <div class="text-xs text-slate-400 mb-1" id="labelPlayerO">بازیکن O</div>
+                    <div id="scoreO" class="text-xl font-bold text-pink-400">0</div>
+                </div>
+            </div>
+
+            <!-- وضعیت نوبت بازیکن -->
+            <div id="statusMessage" class="mb-6 text-lg font-medium transition-all duration-300 bg-slate-800/30 py-2 px-4 rounded-full inline-block border border-slate-700/30">
+                نوبت بازیکن: <span class="text-cyan-400 font-bold">X</span>
+            </div>
+
+            <!-- صفحه بازی (Grid) -->
+            <div id="board" class="grid grid-cols-3 gap-3 bg-slate-900/80 p-4 rounded-3xl shadow-2xl border border-slate-700/50 aspect-square mb-6">
+                <!-- خانه‌ها توسط جاوااسکریپت ساخته می‌شوند -->
+            </div>
+
+            <!-- دکمه‌های کنترل -->
+            <div class="grid grid-cols-2 gap-3">
+                <button id="resetBtn" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 font-bold py-3 px-4 rounded-xl transition-all duration-200 text-sm">
+                    دست بعدی
+                </button>
+                <button id="backMenuBtn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-purple-500/20 text-sm">
+                    تغییر حالت بازی
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const setupMenu = document.getElementById('setupMenu');
+        const gameContainer = document.getElementById('gameContainer');
+        const board = document.getElementById('board');
+        const statusMessage = document.getElementById('statusMessage');
+        const resetBtn = document.getElementById('resetBtn');
+        const backMenuBtn = document.getElementById('backMenuBtn');
+        
+        const scoreXEl = document.getElementById('scoreX');
+        const scoreOEl = document.getElementById('scoreO');
+        const scoreDrawsEl = document.getElementById('scoreDraws');
+        const labelPlayerX = document.getElementById('labelPlayerX');
+        const labelPlayerO = document.getElementById('labelPlayerO');
+
+        let gameState = ["", "", "", "", "", "", "", "", ""];
+        let currentPlayer = "X"; 
+        let gameActive = true;
+        let isSinglePlayer = false; 
+        let scores = { X: 0, O: 0, draws: 0 };
+
+        const winningConditions = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+
+        // رویدادهای منو
+        document.getElementById('singlePlayerBtn').addEventListener('click', () => startGameMode(true));
+        document.getElementById('multiPlayerBtn').addEventListener('click', () => startGameMode(false));
+        backMenuBtn.addEventListener('click', showMenu);
+        resetBtn.addEventListener('click', nextRound);
+
+        function startGameMode(singlePlayer) {
+            isSinglePlayer = singlePlayer;
+            scores = { X: 0, O: 0, draws: 0 };
+            updateScoresDisplay();
+
+            if (isSinglePlayer) {
+                labelPlayerX.textContent = "شما (X)";
+                labelPlayerO.textContent = "سیستم (O)";
+            } else {
+                labelPlayerX.textContent = "بازیکن X";
+                labelPlayerO.textContent = "بازیکن O";
+            }
+
+            // انیمیشن سوییچ به بازی
+            setupMenu.classList.add('hidden');
+            gameContainer.classList.remove('hidden');
+            setTimeout(() => {
+                gameContainer.classList.remove('opacity-0', 'scale-95');
+            }, 50);
+
+            initRound();
+        }
+
+        function showMenu() {
+            gameContainer.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                gameContainer.classList.add('hidden');
+                setupMenu.classList.remove('hidden');
+            }, 300);
+        }
+
+        function initRound() {
+            gameState = ["", "", "", "", "", "", "", "", ""];
+            gameActive = true;
+            currentPlayer = "X";
+            statusMessage.innerHTML = `نوبت شماست: <span class="text-cyan-400 font-bold">X</span>`;
+            createBoardCells();
+        }
+
+        function nextRound() {
+            initRound();
+        }
+
+        function createBoardCells() {
+            board.innerHTML = "";
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('button');
+                cell.setAttribute('data-index', i);
+                cell.className = "cell bg-slate-800/70 hover:bg-slate-700/50 rounded-2xl flex items-center justify-center text-4xl font-black transition-all duration-200 border border-slate-700/30 shadow-inner focus:outline-none focus:ring-2 focus:ring-purple-500/50 select-none aspect-square";
+                cell.addEventListener('click', () => handleCellClick(cell, i));
+                board.appendChild(cell);
+            }
+        }
+
+        function handleCellClick(cell, index) {
+            if (gameState[index] !== "" || !gameActive) return;
+            if (isSinglePlayer && currentPlayer === "O") return; // جلوگیری از کلیک در نوبت سیستم
+
+            makeMove(index, cell);
+
+            if (gameActive && isSinglePlayer && currentPlayer === "O") {
+                statusMessage.innerHTML = `<span class="text-pink-400 font-bold animate-pulse">سیستم در حال فکر کردن...</span>`;
+                setTimeout(aiMove, 500); // تاخیر کوتاه برای طبیعی‌تر شدن بازی سیستم
+            }
+        }
+
+        function makeMove(index, cell) {
+            gameState[index] = currentPlayer;
+            
+            if (currentPlayer === "X") {
+                cell.innerHTML = '<span class="text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] animate-scale">X</span>';
+            } else {
+                cell.innerHTML = '<span class="text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.5)] animate-scale">O</span>';
+            }
+
+            checkResult();
+        }
+
+        // هوش مصنوعی سیستم
+        function aiMove() {
+            if (!gameActive) return;
+
+            let targetIndex = -1;
+
+            // ۱. اولویت اول: بررسی اینکه آیا سیستم خودش می‌تواند در این حرکت برنده شود؟
+            targetIndex = findWinningMove("O");
+
+            // ۲. اولویت دوم: بررسی اینکه آیا بازیکن در حرکت بعدی برنده می‌شود؟ (دفاع / سد کردن)
+            if (targetIndex === -1) {
+                targetIndex = findWinningMove("X");
+            }
+
+            // ۳. اولویت سوم: اگر مرکز خالی است، آنجا را بگیرد
+            if (targetIndex === -1 && gameState[4] === "") {
+                targetIndex = 4;
+            }
+
+            // ۴. اولویت چهارم: انتخاب تصادفی از بین خانه‌های خالی
+            if (targetIndex === -1) {
+                const emptyCells = [];
+                gameState.forEach((val, idx) => { if (val === "") emptyCells.push(idx); });
+                if (emptyCells.length > 0) {
+                    targetIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                }
+            }
+
+            if (targetIndex !== -1) {
+                const cell = document.querySelector(`.cell[data-index='${targetIndex}']`);
+                makeMove(targetIndex, cell);
+            }
+        }
+
+        // پیدا کردن حرکت برنده یا مسدود کننده برای یک بازیکن خاص
+        function findWinningMove(player) {
+            for (let i = 0; i < winningConditions.length; i++) {
+                const [a, b, c] = winningConditions[i];
+                const values = [gameState[a], gameState[b], gameState[c]];
+                
+                // اگر دو خانه با علامت بازیکن پر شده باشد و یک خانه خالی باشد
+                const playerCount = values.filter(v => v === player).length;
+                const emptyCount = values.filter(v => v === "").length;
+
+                if (playerCount === 2 && emptyCount === 1) {
+                    if (gameState[a] === "") return a;
+                    if (gameState[b] === "") return b;
+                    if (gameState[c] === "") return c;
+                }
+            }
+            return -1;
+        }
+
+        function checkResult() {
+            let roundWon = false;
+            let winningLine = [];
+
+            for (let i = 0; i < winningConditions.length; i++) {
+                const [a, b, c] = winningConditions[i];
+                if (gameState[a] && gameState[a] === gameState[b] && gameState[a] === gameState[c]) {
+                    roundWon = true;
+                    winningLine = [a, b, c];
+                    break;
+                }
+            }
+
+            if (roundWon) {
+                highlightWinners(winningLine);
+                let winnerName = currentPlayer;
+                if (isSinglePlayer) {
+                    winnerName = currentPlayer === "X" ? "شما" : "سیستم";
+                } else {
+                    winnerName = `بازیکن ${currentPlayer}`;
+                }
+                statusMessage.innerHTML = `<span class="${currentPlayer === 'X' ? 'text-cyan-400' : 'text-pink-400'} font-bold text-xl">${winnerName} برنده شد! 🎉</span>`;
+                scores[currentPlayer]++;
+                updateScoresDisplay();
+                gameActive = false;
+                return;
+            }
+
+            if (!gameState.includes("")) {
+                statusMessage.innerHTML = `<span class="text-slate-300 font-bold">بازی مساوی شد! 🤝</span>`;
+                scores.draws++;
+                updateScoresDisplay();
+                gameActive = false;
+                return;
+            }
+
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            
+            if (isSinglePlayer) {
+                statusMessage.innerHTML = currentPlayer === "X" ? `نوبت شماست: <span class="text-cyan-400 font-bold">X</span>` : `نوبت سیستم...`;
+            } else {
+                statusMessage.innerHTML = `نوبت بازیکن: <span class="${currentPlayer === 'X' ? 'text-cyan-400' : 'text-pink-400'} font-bold">${currentPlayer}</span>`;
+            }
+        }
+
+        function highlightWinners(cellsIdx) {
+            const cells = document.querySelectorAll('.cell');
+            cellsIdx.forEach(idx => {
+                cells[idx].classList.add('winning-cell', 'bg-purple-950/40', 'border-pink-500');
+            });
+        }
+
+        function updateScoresDisplay() {
+            scoreXEl.textContent = scores.X;
+            scoreOEl.textContent = scores.O;
+            scoreDrawsEl.textContent = scores.draws;
+        }
+    </script>
+</body>
+<footer class="site-footer">
+    <p> <a href="https://www.karimzaadeh.ir" target="_blank" rel="noopener noreferrer">فرهاد کریم‌زاده | Farhad Karimzadeh</a></p>
+</footer>
+</html>
