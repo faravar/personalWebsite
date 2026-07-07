@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>یوتیوب دانلودر پیشرفته</title>
+    <!-- اضافه کردن فونت و آیکون‌ها -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://v1.fontapi.ir/css/Vazir');
+        body { font-family: 'Vazir', sans-serif; background-color: #0f0f0f; }
+        .youtube-gradient { background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%); }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col justify-between">
+
+    <!-- هدر سایت -->
+    <header class="border-b border-gray-800 bg-[#212121] py-4 px-6 sticky top-0 z-50 shadow-md">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fab fa-youtube text-red-600 text-3xl animate-pulse"></i>
+                <h1 class="text-xl font-black tracking-wide text-white">یوتیوب <span class="text-red-500">دانلودر</span></h1>
+            </div>
+            <span class="text-xs bg-red-600/20 text-red-500 px-3 py-1 rounded-full font-bold border border-red-500/30">نسخه پرو v2.0</span>
+        </div>
+    </header>
+
+    <!-- محتوای اصلی -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-12">
+        
+        <!-- باکس باکس ورودی لینک -->
+        <div class="bg-[#212121] rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-800 text-center mb-8">
+            <h2 class="text-2xl font-bold mb-3 text-white">دانلود سریع ویدیو از یوتیوب</h2>
+            <p class="text-gray-400 text-sm mb-6">لینک ویدیو مورد نظر خود را در کادر زیر وارد کنید و کیفیت دلخواه را دانلود کنید.</p>
+            
+            <form id="downloadForm" class="flex flex-col md:flex-row gap-3">
+                <div class="relative flex-grow">
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
+                        <i class="fas fa-link"></i>
+                    </span>
+                    <input type="url" id="videoUrl" required
+                        class="w-full pr-12 pl-4 py-4 bg-[#121212] border border-gray-750 rounded-xl focus:outline-none focus:border-red-500 text-left text-white tracking-wide placeholder-gray-500 transition-all"
+                        placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <button type="submit" 
+                    class="youtube-gradient hover:opacity-90 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 whitespace-nowrap">
+                    <span>بررسی ویدیو</span>
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- لودینگ استیت -->
+        <div id="loading" class="hidden text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
+            <p class="text-gray-400">در حال دریافت اطلاعات ویدیو از یوتیوب...</p>
+        </div>
+
+        <!-- بخش نمایش نتایج (پس از بررسی لینک) -->
+        <div id="resultSection" class="hidden bg-[#212121] rounded-2xl p-6 shadow-2xl border border-gray-800 grid grid-cols-1 md:grid-cols-5 gap-6 transition-all duration-500">
+            
+            <!-- کاور ویدیو -->
+            <div class="md:col-span-2">
+                <div class="relative rounded-xl overflow-hidden shadow-lg aspect-video">
+                    <img id="videoThumb" src="" alt="کاور ویدیو" class="w-full h-full object-cover">
+                    <span id="videoDuration" class="absolute bottom-2 left-2 bg-black/80 px-2 py-0.5 rounded text-xs text-white">00:00</span>
+                </div>
+                <h3 id="videoTitle" class="text-md font-bold mt-3 text-white line-clamp-2 leading-relaxed">عنوان ویدیو در اینجا قرار می‌گیرد</h3>
+                <p id="videoChannel" class="text-sm text-gray-400 mt-1"><i class="fas fa-user-circle mr-1"></i> کانال یوتیوب</p>
+            </div>
+
+            <!-- گزینه‌های دانلود -->
+            <div class="md:col-span-3 flex flex-col justify-between">
+                <h4 class="text-sm font-bold text-gray-400 border-b border-gray-800 pb-2 mb-3">کیفیت‌های موجود برای دانلود:</h4>
+                
+                <div class="space-y-3">
+                    <!-- Mp4 1080p -->
+                    <div class="flex items-center justify-between bg-[#121212] p-3 rounded-xl border border-gray-800 hover:border-gray-700 transition">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-green-500/20 text-green-500 text-xs font-bold px-2 py-1 rounded">MP4</span>
+                            <div>
+                                <p class="text-sm font-bold text-white">Full HD (1080p)</p>
+                                <p class="text-xs text-gray-500">حجم تقریبی: ~45 مگابایت</p>
+                            </div>
+                        </div>
+                        <button onclick="startDownload('1080p')" class="bg-gray-800 hover:bg-red-600 text-white text-xs font-bold py-2 px-4 rounded-lg transition-all flex items-center gap-1">
+                            <i class="fas fa-download"></i> دانلود
+                        </button>
+                    </div>
+
+                    <!-- Mp4 720p -->
+                    <div class="flex items-center justify-between bg-[#121212] p-3 rounded-xl border border-gray-800 hover:border-gray-700 transition">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-blue-500/20 text-blue-500 text-xs font-bold px-2 py-1 rounded">MP4</span>
+                            <div>
+                                <p class="text-sm font-bold text-white">HD (720p)</p>
+                                <p class="text-xs text-gray-500">حجم تقریبی: ~22 مگابایت</p>
+                            </div>
+                        </div>
+                        <button onclick="startDownload('720p')" class="bg-gray-800 hover:bg-red-600 text-white text-xs font-bold py-2 px-4 rounded-lg transition-all flex items-center gap-1">
+                            <i class="fas fa-download"></i> دانلود
+                        </button>
+                    </div>
+
+                    <!-- Mp3 Audio -->
+                    <div class="flex items-center justify-between bg-[#121212] p-3 rounded-xl border border-gray-800 hover:border-gray-700 transition">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-purple-500/20 text-purple-500 text-xs font-bold px-2 py-1 rounded">MP3</span>
+                            <div>
+                                <p class="text-sm font-bold text-white">فقط صدا (Audio 128kbps)</p>
+                                <p class="text-xs text-gray-500">حجم تقریبی: ~4.5 مگابایت</p>
+                            </div>
+                        </div>
+                        <button onclick="startDownload('audio')" class="bg-gray-800 hover:bg-red-600 text-white text-xs font-bold py-2 px-4 rounded-lg transition-all flex items-center gap-1">
+                            <i class="fas fa-download"></i> دانلود MP3
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- فوتر سایت -->
+    <footer class="text-center py-6 border-t border-gray-800 bg-[#121212] text-xs text-gray-500">
+        <p>طراحی شده با <i class="fas fa-heart text-red-600 mx-1"></i> برای تجربه کاربری عالی و سریع</p>
+        <p><a href="https://www.karimzaadeh.ir" target="_blank" rel="noopener noreferrer">فرهاد کریم‌زاده | Farhad Karimzadeh</a></p>
+    </footer>
+
+    <!-- جاوا اسکریپت کنترلر (SPA) -->
+    <script>
+        document.getElementById('downloadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const urlInput = document.getElementById('videoUrl').value;
+            const loading = document.getElementById('loading');
+            const resultSection = document.getElementById('resultSection');
+
+            // شبیه‌سازی دریافت اطلاعات ویدیو
+            resultSection.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                
+                // پر کردن اطلاعات فرضی (جهت دمو)
+                document.getElementById('videoThumb').src = "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500&auto=format&fit=crop&q=60";
+                document.getElementById('videoTitle').innerHTML = "آموزش جامع برنامه نویسی جاوا اسکریپت از صفر تا صد (پروژه محور)";
+                document.getElementById('videoChannel').innerHTML = "<i class='fas fa-check-circle text-blue-500 mr-1'></i> کانال آموزشی فرضی";
+                document.getElementById('videoDuration').innerText = "14:25";
+
+                // نمایش بخش دانلود
+                resultSection.classList.remove('hidden');
+                resultSection.scrollIntoView({ behavior: 'smooth' });
+            }, 1500);
+        });
+
+        function startDownload(quality) {
+            alert(`درخواست دانلود با کیفیت ${quality} ارسال شد. (در نسخه واقعی، اینجا لینک دانلود مستقیم سرور شما قرار می‌گیرد)`);
+        }
+    </script>
+</body>
+</html>
