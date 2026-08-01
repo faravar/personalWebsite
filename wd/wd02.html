@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوت‌نامه عروسی زهره و جواد</title>
+    <!-- فونت وزیرمتن برای متن‌های عادی -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <!-- جایگزین کردن لینک فونت نستعلیق معتبر -->
+    <link rel="preconnect" href="https://v1.fontapi.ir">
+    <link href="https://v1.fontapi.ir/css/IranNastaliq" rel="stylesheet" type="text/css" />
+    <style>
+        /* فراخوانی فونت ایران نستعلیق استاندارد وب */
+       
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1c29 0%, #0f1016 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+            color: #333;
+        }
+
+        /* بوم انیمیشن قلب‌ها */
+        #heartCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* کارت اصلی */
+        .card-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 480px;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 200px 200px 24px 24px;
+            border: 2px solid rgba(212, 175, 55, 0.6);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
+                        0 0 20px rgba(212, 175, 55, 0.2);
+            padding: 45px 30px 40px 30px;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+            overflow: hidden;
+        }
+
+        /* تصویر پس‌زمینه کارت */
+        .card-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/wd/wd.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            color: #444;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        /* استایل اختصاصی فونت نستعلیق برای اسامی */
+        .names {
+            font-family: 'IranNastaliq', 'Iran Nastaliq', 'Vazirmatn', serif !important;
+            font-size: 6rem;
+            color: #8a1c31;
+            min-height: 1.8em;
+            margin-top: 5px;
+            margin-bottom: 1px;
+            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.15);
+            line-height: 1.8;
+            padding: 5px 0;
+        }
+
+        .names span {
+            font-family: 'IranNastaliq', 'Iran Nastaliq', 'Vazirmatn', serif !important;
+            font-size: 4rem;
+            color: #6d5300;
+            margin: 0 5px;
+            margin-right: 15px;
+        }
+
+        /* استایل نستعلیق برای شعر */
+        /* استایل شعر به‌صورت بیت با مصرع اول راست‌چین و مصرع دوم چپ‌چین */
+.poem {
+    font-family: 'IranNastaliq', 'Iran Nastaliq', 'Vazirmatn', serif !important;
+    font-size: 2rem;
+    color: #222;
+    min-height: 1.6em;
+    background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.25), transparent);
+    flex-direction: column;
+    gap: 50px;
+    margin: -15px auto 20px auto; /* مقدار esto حذف شد */
+    width: 100%;
+}
+
+.poem .line1 {
+    font-family: 'IranNastaliq', 'Iran Nastaliq', 'Vazirmatn', serif !important;
+   
+}
+
+.poem .line2 {
+    font-family: 'IranNastaliq', 'Iran Nastaliq', 'Vazirmatn', serif !important;
+    
+    margin-right: 10px;
+   
+}
+        .invitation-text {
+            font-size: 1rem;
+            color: #333;
+            margin: 15px 0;
+            line-height: 1.7;
+            font-weight: 600;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            height: 1px;
+            width: 60px;
+            background: #d4af37;
+        }
+
+        .divider-icon {
+            margin: 0 10px;
+            color: #d4af37;
+            font-size: 1.2rem;
+        }
+
+        .date-box {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #111;
+            margin-bottom: 12px;
+        }
+
+        .details {
+            font-size: 1.05rem;
+            color: #222;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .sub-note {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        .countdown-title {
+            margin-top: 25px;
+            font-size: 0.95rem;
+            color: #8a1c31;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+            direction: ltr;
+        }
+
+        .timer-box {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #d4af37;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+             border-radius: 20px 30px 20px 30px;
+            padding: 10px 8px;
+            min-width: 65px;
+        }
+
+        .timer-box .number {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #8a1c31;
+            display: block;
+        }
+
+        .timer-box .label {
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 4px;
+            display: block;
+            direction: rtl;
+        }
+
+        .calendar-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 25px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #8a1c31 0%, #b82342 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 20px 40px 20px 40px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(138, 28, 49, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            width: 70%;
+        }
+
+        .calendar-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(138, 28, 49, 0.45);
+        }
+
+        @media (max-width: 400px) {
+            .card-container {
+                padding: 35px 20px 30px 20px;
+            }
+            .names {
+                font-size: 3rem;
+            }
+            .poem {
+                font-size: 1.8rem;
+            }
+            .timer-box {
+                min-width: 55px;
+            }
+            .calendar-btn {
+                margin-top: 14px;
+                width: 100%;
+                padding: 14px 24px;
+                font-size: 1rem;
+            }
+        }
+        .music-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.9);
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.music-btn:hover {
+    transform: scale(1.1);
+}
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+    <source src="/wd/music.mp3" type="audio/mpeg">
+    مرورگر شما از پخش صوت پشتیبانی نمی‌کند.
+</audio>
+
+<!-- دکمه شناور کنترل موزیک (اختیاری اما بسیار شیک) -->
+<button id="musicBtn" class="music-btn" onclick="toggleMusic()">🎵</button>
+<!-- لایه خوش‌آمدگویی برای گرفتن اولین کلیک -->
+<div id="welcomeOverlay" onclick="openCard()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 16, 22, 0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; cursor: pointer;">
+    <h2 style="font-family: 'Vazirmatn'; margin-bottom: 15px; font-weight: 500;">دعوت‌نامه عروسی زهره و جواد</h2>
+    <div style="padding: 12px 28px; background: linear-gradient(135deg, #d4af37, #b38f2a); border-radius: 50px; color: #fff; font-weight: bold; box-shadow: 0 4px 15px rgba(212,175,55,0.4);">
+        💌 برای مشاهده دعوت‌نامه لمس کنید
+    </div>
+</div>
+
+    <canvas id="heartCanvas"></canvas>
+
+    <div class="card-container">
+        <div class="header-title">به نام خالق عشق</div>
+        
+        <!-- بخش اسامی با فونت نستعلیق -->
+        <div class="names">
+            زهره <span>و</span> جواد
+        </div>
+
+        <!-- بخش شعر با فونت نستعلیق -->
+        <div class="poem">
+    <span class="line1">معشوقه به سامان شد</span>
+    <span class="line2">تا باد چنین بادا...</span>
+</div>
+        <div class="invitation-text">
+            دعوت ما را در بزم یکی شدنمان پذیرا باشید
+        </div>
+
+        <div class="divider">
+            <span class="divider-icon">❖</span>
+        </div>
+
+        <div class="date-box">
+            ۵ شهریور ماه ۱۴۰۵
+        </div>
+
+        <div class="details">
+            ساعت ۱۹ ⁘ باغ ستاره شب
+        </div>
+
+        <div class="sub-note">
+            (مراسم پاتختی همزمان برگزار می‌گردد)
+        </div>
+
+        <div class="countdown-title"> تا شب وصل </div>
+        <div class="timer-container" id="timer">
+            <div class="timer-box">
+                <span class="number" id="days">00</span>
+                <span class="label">روز</span>
+            </div>
+            <div class="timer-box">
+                <span class="number" id="hours">00</span>
+                <span class="label">ساعت</span>
+            </div>
+            <div class="timer-box">
+                <span class="number" id="minutes">00</span>
+                <span class="label">دقیقه</span>
+            </div>
+            <div class="timer-box">
+                <span class="number" id="seconds">00</span>
+                <span class="label">ثانیه</span>
+            </div>
+        </div>
+
+        <button class="calendar-btn" onclick="addToCalendar()">
+            📅 افزودن یادآوری به تقویم
+        </button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class Heart {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = height + Math.random() * 100;
+                this.size = Math.random() * 12 + 8;
+                this.speedY = Math.random() * 1.2 + 0.5;
+                this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.color = `rgba(${200 + Math.floor(Math.random()*55)}, ${50 + Math.floor(Math.random()*50)}, ${80 + Math.floor(Math.random()*50)}, ${this.opacity})`;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.beginPath();
+                ctx.fillStyle = this.color;
+                
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(0, topCurveHeight);
+                ctx.bezierCurveTo(0, 0, -this.size / 2, 0, -this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(-this.size / 2, (this.size + topCurveHeight) / 2, 0, this.size, 0, this.size);
+                ctx.bezierCurveTo(0, this.size, this.size / 2, (this.size + topCurveHeight) / 2, this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(this.size / 2, 0, 0, 0, 0, topCurveHeight);
+                
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += Math.sin(this.y * 0.02) * 0.5;
+
+                if (this.y < -20) {
+                    this.reset();
+                }
+            }
+        }
+
+        const hearts = Array.from({ length: 35 }, () => new Heart());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        const targetDate = new Date("2026-08-27T19:00:00+03:30").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = toPersianDigits(days.toString().padStart(2, '0'));
+                document.getElementById('hours').innerText = toPersianDigits(hours.toString().padStart(2, '0'));
+                document.getElementById('minutes').innerText = toPersianDigits(minutes.toString().padStart(2, '0'));
+                document.getElementById('seconds').innerText = toPersianDigits(seconds.toString().padStart(2, '0'));
+            } else {
+                document.getElementById('timer').innerHTML = "<div style='color: #8a1c31; font-weight: bold;'>مراسم آغاز شده است!</div>";
+            }
+        }
+
+        function toPersianDigits(str) {
+            const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            return str.replace(/[0-9]/g, function(w) {
+                return persianDigits[parseInt(w)];
+            });
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function addToCalendar() {
+            const eventTitle = "جشن عروسی زهره و جواد";
+            const eventDetails = "دعوت ما را در بزم یکی شدنمان پذیرا باشید (مراسم پاتختی همزمان برگزار می گردد)";
+            const location = "باغ ستاره شب";
+            
+            const startDate = "20260827T153000Z";
+            const endDate = "20260827T203000Z";
+
+            const icsContent = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wedding Invitation//FA
+BEGIN:VEVENT
+SUMMARY:${eventTitle}
+DESCRIPTION:${eventDetails}
+LOCATION:${location}
+DTSTART:${startDate}
+DTEND:${endDate}
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', 'wedding-zohreh-javad.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+const audio = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicBtn');
+let isPlaying = false;
+
+// ۱. پخش موزیک با اولین کلیک کاربر روی هرجای صفحه
+document.body.addEventListener('click', function playOnFirstClick() {
+    if (!isPlaying) {
+        audio.play().then(() => {
+            isPlaying = true;
+            musicBtn.innerText = '🔊';
+        }).catch(err => console.log("خطا در پخش آهنگ:", err));
+    }
+    // حذف لیسنر بعد از اولین کلیک
+    document.body.removeEventListener('click', playOnFirstClick);
+}, { once: true });
+
+// ۲. قابلیت قطع و وصل کردن آهنگ با دکمه
+function toggleMusic() {
+    if (isPlaying) {
+        audio.pause();
+        musicBtn.innerText = '🔇';
+        isPlaying = false;
+    } else {
+        audio.play();
+        musicBtn.innerText = '🔊';
+        isPlaying = true;
+    }
+}
+function openCard() {
+    // ۱. محو کردن لایه ورودی
+    const overlay = document.getElementById('welcomeOverlay');
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.5s ease';
+    setTimeout(() => overlay.style.display = 'none', 500);
+
+    // ۲. پخش مستقیم موزیک
+    const audio = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    
+    if (audio) {
+        audio.play().then(() => {
+            if (musicBtn) musicBtn.innerText = '🔊';
+        }).catch(err => console.log("خطا:", err));
+    }
+}
+    </script>
+   
+
+</body>
+</html>
