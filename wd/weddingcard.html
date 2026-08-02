@@ -553,6 +553,7 @@ function openCard() {
     const musicBtn = document.getElementById('musicBtn');
     
     if (audio) {
+        audio.load();
         audio.play().then(() => {
             if (musicBtn) musicBtn.innerText = '🔊';
         }).catch(err => console.log("خطا:", err));
